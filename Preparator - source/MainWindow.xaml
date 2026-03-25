@@ -4,6 +4,7 @@
         Title="Preparator"
         Height="600" Width="1000"
         WindowStyle="None"
+        ResizeMode="CanResize"
         Background="#1e1e1e">
 
     <Grid>
@@ -16,6 +17,7 @@
 
         <!-- TOP BAR -->
         <Grid Background="#2d2d30"
+              Grid.Row="0"
               MouseLeftButtonDown="TopBar_MouseLeftButtonDown">
 
             <Grid.ColumnDefinitions>
@@ -37,18 +39,29 @@
 
                 <!-- MINIMIZE -->
                 <Button Style="{StaticResource WindowButtonStyle}"
-                        Click="Minimize_Click"
-                        Content="-"/>
+                        Click="Minimize_Click">
+                    <TextBlock Text="&#xE921;"
+                               FontFamily="Segoe MDL2 Assets"
+                               FontSize="12"/>
+                </Button>
 
                 <!-- MAXIMIZE -->
                 <Button Style="{StaticResource WindowButtonStyle}"
-                        Click="Maximize_Click"
-                        Content="□"/>
+                        Click="Maximize_Click">
+                    <TextBlock x:Name="MaxIcon"
+                               Text="&#xE922;"
+                               FontFamily="Segoe MDL2 Assets"
+                               FontSize="12"/>
+                </Button>
 
                 <!-- CLOSE -->
                 <Button Style="{StaticResource CloseButtonStyle}"
-                        Click="Close_Click"
-                        Content="X"/>
+                        Click="Close_Click">
+                    <TextBlock Text="&#xE8BB;"
+                               FontFamily="Segoe MDL2 Assets"
+                               FontSize="12"/>
+                </Button>
+                
             </StackPanel>
         </Grid>
 
