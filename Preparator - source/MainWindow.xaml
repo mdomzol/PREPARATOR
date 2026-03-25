@@ -5,61 +5,140 @@
         Height="600" Width="1000"
         WindowStyle="None"
         Background="#1e1e1e">
-    
+
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="220"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        
-        <!-- SIDEBAR -->
-        <StackPanel Background="#252526">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <!-- TOP -->
+            <RowDefinition Height="*"/>
+            <!-- REST -->
+        </Grid.RowDefinitions>
 
-            <TextBlock Text="PREPARATOR"
+        <!-- TOP BAR -->
+        <Grid Background="#2d2d30"
+              MouseLeftButtonDown="TopBar_MouseLeftButtonDown">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="120"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- TITLE -->
+            <TextBlock Text="Preparator"
+                       VerticalAlignment="Center"
+                       Margin="15,0"
                        Foreground="White"
-                       FontSize="18"
-                       Margin="20"
-                       FontWeight="Bold"/>
-            
-            <!-- START -->
-            <ToggleButton Style="{StaticResource NavToggleButton}"
-                          Command="{Binding ShowDashboardCommand}"
-                          IsChecked="{Binding SelectedView, Converter={StaticResource StringToBoolConverter}, ConverterParameter=Dashboard}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" Margin="0,0,10,0"/>
-                    <TextBlock Text="Start"/>
-                </StackPanel>
-            </ToggleButton>
+                       FontWeight="SemiBold"/>
 
-            <!-- SYSTEM -->
-            <ToggleButton Style="{StaticResource NavToggleButton}"
+            <!-- BUTTONS -->
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right">
+
+                <!-- MINIMIZE -->
+                <Button Style="{StaticResource WindowButtonStyle}"
+                        Click="Minimize_Click"
+                        Content="-"/>
+
+                <!-- MAXIMIZE -->
+                <Button Style="{StaticResource WindowButtonStyle}"
+                        Click="Maximize_Click"
+                        Content="□"/>
+
+                <!-- CLOSE -->
+                <Button Style="{StaticResource CloseButtonStyle}"
+                        Click="Close_Click"
+                        Content="X"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- REST -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- SIDEBAR -->
+            <StackPanel Background="#252526">
+
+                <TextBlock Text="PREPARATOR"
+                           Foreground="White"
+                           FontSize="18"
+                           Margin="20"
+                           FontWeight="Bold"/>
+
+                <!-- START -->
+                <ToggleButton Style="{StaticResource NavToggleButton}"
+                              Command="{Binding ShowDashboardCommand}"
+                              IsChecked="{Binding SelectedView, Converter={StaticResource StringToBoolConverter}, ConverterParameter=Dashboard}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" Margin="0,0,10,0"/>
+                        <TextBlock Text="Start"/>
+                    </StackPanel>
+                </ToggleButton>
+
+                <!-- SYSTEM -->
+                <ToggleButton Style="{StaticResource NavToggleButton}"
                           Command="{Binding ShowSystemCommand}"
                           IsChecked="{Binding SelectedView, Converter={StaticResource StringToBoolConverter}, ConverterParameter=System}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" Margin="0,0,10,0"/>
-                    <TextBlock Text="System"/>
-                </StackPanel>
-            </ToggleButton>
-            
-        </StackPanel>
-        
-        <!-- CONTENT -->
-        <ContentControl Grid.Column="1"
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" Margin="0,0,10,0"/>
+                        <TextBlock Text="System"/>
+                    </StackPanel>
+                </ToggleButton>
+
+            </StackPanel>
+
+            <!-- CONTENT -->
+            <ContentControl Grid.Column="1"
                         Content="{Binding CurrentView}">
-            <ContentControl.Resources>
-                <Style TargetType="ContentPresenter">
-                    <Setter Property="Opacity" Value="0"/>
-                    <Style.Triggers>
-                        <EventTrigger RoutedEvent="Loaded">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation From="0" To="1" Duration="0:0:0.25"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </Style.Triggers>
-                </Style>
-            </ContentControl.Resources>
-        </ContentControl>
+
+                <ContentControl.Resources>
+                    <Style TargetType="ContentPresenter">
+
+                        <!-- Start -->
+                        <Setter Property="Opacity" Value="0"/>
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <TranslateTransform X="30"/>
+                            </Setter.Value>
+                        </Setter>
+
+                        <Style.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard>
+
+                                        <!-- FADE -->
+                                        <DoubleAnimation
+                                        Storyboard.TargetProperty="Opacity"
+                                        From="0"
+                                        To="1"
+                                        Duration="0:0:0.3"/>
+
+                                        <!-- SLIDE -->
+                                        <DoubleAnimation
+                                        Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                        From="80"
+                                        To="0"
+                                        Duration="0:0:0.3">
+
+                                            <DoubleAnimation.EasingFunction>
+                                                <QuadraticEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+
+                                        </DoubleAnimation>
+
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Style.Triggers>
+
+                    </Style>
+                </ContentControl.Resources>
+
+            </ContentControl>
+        </Grid>
     </Grid>
 </Window>
