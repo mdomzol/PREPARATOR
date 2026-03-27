@@ -48,10 +48,23 @@
                 <!-- MAXIMIZE -->
                 <Button Style="{StaticResource WindowButtonStyle}"
                         Click="Maximize_Click">
-                    <TextBlock x:Name="MaxIcon"
-                               Text="&#xE922;"
-                               FontFamily="Segoe MDL2 Assets"
-                               FontSize="12"/>
+                    <TextBlock FontFamily="Segoe MDL2 Assets"
+                               FontSize="12" Cursor="">
+
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="&#xE922;"/> <!-- maximize -->
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=WindowState}"
+                                                 Value="Maximized">
+                                        <Setter Property="Text" Value="&#xE923;"/> <!-- restore -->
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                        
+                    </TextBlock>
                 </Button>
 
                 <!-- CLOSE -->
@@ -98,6 +111,26 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" Margin="0,0,10,0"/>
                         <TextBlock Text="System"/>
+                    </StackPanel>
+                </ToggleButton>
+
+                <!-- POWER -->
+                <ToggleButton Style="{StaticResource NavToggleButton}"
+                        Command="{Binding ShowPowerCommand}"
+                        IsChecked="{Binding SelectedView, Converter={StaticResource StringToBoolConverter}, ConverterParameter=Power}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE945;" FontFamily="Segoe MDL2 Assets" Margin="0,0,10,0"/>
+                        <TextBlock Text="Power"/>
+                    </StackPanel>
+                </ToggleButton>
+
+                <!--APPS -->
+                <ToggleButton Style="{StaticResource NavToggleButton}"
+                        Command="{Binding ShowAppsCommand}"
+                        IsChecked="{Binding SelectedView, Converter={StaticResource StringToBoolConverter}, ConverterParameter=Apps}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE71D;" FontFamily="Segoe MDL2 Assets" Margin="0,0,10,0"/>
+                        <TextBlock Text="Applications"/>
                     </StackPanel>
                 </ToggleButton>
 

@@ -31,6 +31,8 @@ namespace Preparator.ViewModels
 
         public ICommand ShowDashboardCommand { get; }
         public ICommand ShowSystemCommand { get; }
+        public ICommand ShowPowerCommand { get; }
+        public ICommand ShowAppsCommand { get; }
 
         public MainViewModel()
         {
@@ -44,6 +46,18 @@ namespace Preparator.ViewModels
             {
                 CurrentView = new SystemView();
                 SelectedView = "System";
+            });
+
+            ShowPowerCommand = new RelayCommand(_ =>
+            {
+                CurrentView = new PowerView();
+                SelectedView = "Power";
+            });
+
+            ShowAppsCommand = new RelayCommand(_ =>
+            {
+                CurrentView = new AppsView();
+                SelectedView = "Apps";
             });
 
             CurrentView = new DashboardView();
