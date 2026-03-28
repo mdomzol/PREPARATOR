@@ -9,7 +9,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\Icons\" />
+    <None Remove="Assets\Icons\7zip.png" />
+    <None Remove="Assets\Icons\chrome.png" />
+    <None Remove="Assets\Icons\discord.png" />
+    <None Remove="Assets\Icons\notepad.png" />
+    <None Remove="Assets\Icons\vlc.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Icons\7zip.png" />
+    <Resource Include="Assets\Icons\chrome.png" />
+    <Resource Include="Assets\Icons\discord.png" />
+    <Resource Include="Assets\Icons\notepad.png" />
+    <Resource Include="Assets\Icons\vlc.png" />
   </ItemGroup>
 
 </Project>

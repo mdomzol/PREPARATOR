@@ -66,10 +66,23 @@
                                     Background="Transparent"
                                     BorderThickness="0">
 
-                                <TextBlock Text="{Binding Name}"
-                                           Foreground="White"
-                                           FontSize="14"
-                                           HorizontalAlignment="Center"/>
+                                <StackPanel 
+                                    HorizontalAlignment="Center">
+                                    
+                                    <!-- ICON -->
+                                    <Image Source="{Binding IconPath}"
+                                           Width="40"
+                                           Height="40"
+                                           Margin="0,0,0,10"/>
+                                    
+                                    <!-- NAME -->
+                                    <TextBlock Text="{Binding Name}"
+                                               Foreground="White"
+                                               FontSize="14"
+                                               
+                                               HorizontalAlignment="Center"/>
+                                </StackPanel>
+
                             </Button>
 
                         </Border>
