@@ -10,18 +10,54 @@
 
   <ItemGroup>
     <None Remove="Assets\Icons\7zip.png" />
+    <None Remove="Assets\Icons\audacity.png" />
+    <None Remove="Assets\Icons\blender.png" />
+    <None Remove="Assets\Icons\cdburnerxp.png" />
     <None Remove="Assets\Icons\chrome.png" />
     <None Remove="Assets\Icons\discord.png" />
+    <None Remove="Assets\Icons\epicgames.png" />
+    <None Remove="Assets\Icons\everything.png" />
+    <None Remove="Assets\Icons\firefox.png" />
+    <None Remove="Assets\Icons\gimp.png" />
+    <None Remove="Assets\Icons\keepass.png" />
+    <None Remove="Assets\Icons\libreoffice.png" />
     <None Remove="Assets\Icons\notepad.png" />
+    <None Remove="Assets\Icons\opera.png" />
+    <None Remove="Assets\Icons\putty.png" />
+    <None Remove="Assets\Icons\revo.png" />
+    <None Remove="Assets\Icons\spotify.png" />
+    <None Remove="Assets\Icons\steam.png" />
+    <None Remove="Assets\Icons\thunderbird.png" />
     <None Remove="Assets\Icons\vlc.png" />
+    <None Remove="Assets\Icons\vscode.png" />
+    <None Remove="Assets\Icons\winscp.png" />
+    <None Remove="Assets\Icons\wiztree.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Assets\Icons\7zip.png" />
+    <Resource Include="Assets\Icons\audacity.png" />
+    <Resource Include="Assets\Icons\blender.png" />
+    <Resource Include="Assets\Icons\cdburnerxp.png" />
     <Resource Include="Assets\Icons\chrome.png" />
     <Resource Include="Assets\Icons\discord.png" />
+    <Resource Include="Assets\Icons\epicgames.png" />
+    <Resource Include="Assets\Icons\everything.png" />
+    <Resource Include="Assets\Icons\firefox.png" />
+    <Resource Include="Assets\Icons\gimp.png" />
+    <Resource Include="Assets\Icons\keepass.png" />
+    <Resource Include="Assets\Icons\libreoffice.png" />
     <Resource Include="Assets\Icons\notepad.png" />
+    <Resource Include="Assets\Icons\opera.png" />
+    <Resource Include="Assets\Icons\putty.png" />
+    <Resource Include="Assets\Icons\revo.png" />
+    <Resource Include="Assets\Icons\spotify.png" />
+    <Resource Include="Assets\Icons\steam.png" />
+    <Resource Include="Assets\Icons\thunderbird.png" />
     <Resource Include="Assets\Icons\vlc.png" />
+    <Resource Include="Assets\Icons\vscode.png" />
+    <Resource Include="Assets\Icons\winscp.png" />
+    <Resource Include="Assets\Icons\wiztree.png" />
   </ItemGroup>
 
 </Project>
