@@ -22,6 +22,7 @@
     <None Remove="Assets\Icons\keepass.png" />
     <None Remove="Assets\Icons\libreoffice.png" />
     <None Remove="Assets\Icons\notepad.png" />
+    <None Remove="Assets\Icons\openoffice.png" />
     <None Remove="Assets\Icons\opera.png" />
     <None Remove="Assets\Icons\putty.png" />
     <None Remove="Assets\Icons\revo.png" />
@@ -48,6 +49,7 @@
     <Resource Include="Assets\Icons\keepass.png" />
     <Resource Include="Assets\Icons\libreoffice.png" />
     <Resource Include="Assets\Icons\notepad.png" />
+    <Resource Include="Assets\Icons\openoffice.png" />
     <Resource Include="Assets\Icons\opera.png" />
     <Resource Include="Assets\Icons\putty.png" />
     <Resource Include="Assets\Icons\revo.png" />

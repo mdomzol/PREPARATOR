@@ -54,6 +54,7 @@ namespace Preparator.ViewModels
 
                 // OFFICE
                 new AppItem { Name = "LibreOffice", NiniteId = "libreoffice", Category = "Office", IconPath = "/Assets/Icons/libreoffice.png" },
+                new AppItem { Name = "OpenOffice", NiniteId = "openffice", Category = "Office", IconPath = "/Assets/Icons/openoffice.png" },
 
                 // DEV
                 new AppItem { Name="VS Code", NiniteId="vscode", Category="Development", IconPath = "/Assets/Icons/vscode.png" },
