@@ -63,7 +63,7 @@ namespace Preparator.ViewModels
                 new AppItem { Name="WinSCP", NiniteId="winscp", Category="Development", IconPath = "/Assets/Icons/winscp.png" },
 
                 // EXTRAS
-                new AppItem { Name = "CDBurnerXP", NiniteId = "cdburnerxp", IconPath="/Assets/Icons/cdburnerxp.png" },
+                new AppItem { Name = "CDBurnerXP", NiniteId = "cdburnerxp", Category = "Other", IconPath="/Assets/Icons/cdburnerxp.png" },
             };
 
             GroupedApps = CollectionViewSource.GetDefaultView(Apps);
