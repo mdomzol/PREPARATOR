@@ -3,241 +3,241 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:Preparator.ViewModels">
 
+    <!-- DATA CONTEXT -->
     <UserControl.DataContext>
         <vm:AppsViewModel/>
     </UserControl.DataContext>
 
+    <!-- ROOT -->
     <Grid Background="#1e1e1e">
-        <StackPanel Margin="20">
-            
-            <!-- HEADER -->
-            <TextBlock Text="Applications"
-                       Foreground="White"
-                       FontSize="24"
-                       Margin="0,0,0,10"/>
-            
-            <!-- COUNT -->
-            <TextBlock Text="{Binding SelectedCount, StringFormat=Selected: {0} apps}"
-                       Foreground="White"
-                       Opacity="0.7"
-                       Margin="0,0,0,20"/>
-            
-            <!-- GRID WITH GROUPS -->
-            <ItemsControl ItemsSource="{Binding AppsView}">
 
-                <!-- GROUP HEADER -->
-                <ItemsControl.GroupStyle>
-                    <GroupStyle>
-                        <GroupStyle.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Name}"
-                                           Foreground="White"
-                                           FontSize="18"
-                                           Margin="10,20,0,10"/>
-                            </DataTemplate>
-                        </GroupStyle.HeaderTemplate>
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
 
-                        <GroupStyle.Panel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel/>
-                            </ItemsPanelTemplate>
-                        </GroupStyle.Panel>
-
-                    </GroupStyle>
-                </ItemsControl.GroupStyle>
+            <StackPanel Margin="20">
                 
-                <!-- ITEM TEMPLATE -->
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-
-                        <Border Margin="10"
-                                Padding="15"
-                                Width="200"
-                                CornerRadius="10"
-                                BorderThickness="2"
-                                Cursor="Hand">
-                            
-                            <!-- CLICK HANDLE -->
-                            <Border.InputBindings>
-                                <MouseBinding Gesture="LeftClick"
-                                              Command="{Binding DataContext.ToggleAppCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                              CommandParameter="{Binding}"/>
-                            </Border.InputBindings>
-
-                                <!-- STYLE -->
-                            <Border.Style>
-                                <Style TargetType="Border">
-                                    <Setter Property="Background" Value="#2d2d30"/>
-                                    <Setter Property="BorderBrush" Value="#2d2d30"/>
-
-                                    <Style.Triggers>
-                                        
-                                        <!-- SELECTED -->
-                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                            <Setter Property="BorderBrush" Value="#3a8dde"/>
-                                            <Setter Property="Effect">
-                                                <Setter.Value>
-                                                    <DropShadowEffect Color="#3a8dde"
-                                                                      BlurRadius="20"
-                                                                      ShadowDepth="0"
-                                                                      Opacity="0.8"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </DataTrigger>
-                                        
-                                        <!-- HOVER -->
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="BorderBrush" Value="#555"/>
-                                        </Trigger>
-                                        
-                                    </Style.Triggers>
-                                </Style>
-                            </Border.Style>
-                            
-                            <!-- CONTENT -->
-                            <Grid>
-                                
-                                <!-- MAIN CONTENT -->
-                                <StackPanel HorizontalAlignment="Center">
-
-                                    <!-- ICON -->
-                                    <Image Source="{Binding IconPath}"
-                                               Width="40"
-                                               Height="40"
-                                               Margin="0,0,0,10"/>
-
-                                    <!-- NAME -->
+                <!-- HEADER -->
+                <TextBlock Text="Applications"
+                           Foreground="White"
+                           FontSize="24"
+                           Margin="0,0,0,10"/>
+                
+                <!-- COUNT -->
+                <TextBlock Text="{Binding SelectedCount, StringFormat=Selected: {0} apps}"
+                           Foreground="White"
+                           Opacity="0.7"
+                           Margin="0,0,0,20"/>
+                
+                <!-- GROUPED ITEMS -->
+                <ItemsControl ItemsSource="{Binding GroupedApps}">
+                    
+                    <!-- GROUPS - VERTICAL -->
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    
+                    <!-- GROUP HEADER -->
+                    <ItemsControl.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
                                     <TextBlock Text="{Binding Name}"
-                                                   Foreground="White"
-                                                   FontSize="14"
-                                                   HorizontalAlignment="Center"/>
-
-                                </StackPanel>
-
-                                <!-- OVERLAY -->
-                                <Border CornerRadius="10"
-                                        Background="#80000000"
-                                        IsHitTestVisible="False">
-
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Setter Property="Opacity" Value="0"/>
-
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                    <Setter Property="Opacity" Value="0.2"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                </Border>
-                                
-                                <!-- CHECKMARK -->
-                                <Border Width="24"
-                                        Height="24"
-                                        Background="#3a8dde"
-                                        CornerRadius="12"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Top"
-                                        Margin="5"
-                                        IsHitTestVisible="False">
-
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Setter Property="Opacity" Value="0"/>
-                                            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
-
-                                            <Setter Property="RenderTransform">
-                                                <Setter.Value>
-                                                    <ScaleTransform ScaleX="0" ScaleY="0"/>
-                                                </Setter.Value>
-                                            </Setter>
-
-                                            <Style.Triggers>
-
-                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
-
-                                                    <DataTrigger.EnterActions>
-                                                        <BeginStoryboard>
-                                                            <Storyboard>
-
-                                                                <!-- SCALE -->
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
-                                                                    To="1"
-                                                                    Duration="0:0:0.2"/>
-
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
-                                                                    To="1"
-                                                                    Duration="0:0:0.2"/>
-
-                                                                <!-- FADE -->
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetProperty="Opacity"
-                                                                    To="1"
-                                                                    Duration="0:0:0.2"/>
-
-                                                            </Storyboard>
-                                                        </BeginStoryboard>
-                                                    </DataTrigger.EnterActions>
-
-                                                </DataTrigger>
-                                                
-                                                <!-- UNSELECT -->
-                                                <DataTrigger Binding="{Binding IsSelected}" Value="False">
-
-                                                    <DataTrigger.EnterActions>
-                                                        <BeginStoryboard>
-                                                            <Storyboard>
-
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
-                                                                    To="0"
-                                                                    Duration="0:0:0.15"/>
-
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
-                                                                    To="0"
-                                                                    Duration="0:0:0.15"/>
-
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetProperty="Opacity"
-                                                                    To="0"
-                                                                    Duration="0:0:0.15"/>
-                                                                
-                                                            </Storyboard>
-                                                        </BeginStoryboard>
-                                                    </DataTrigger.EnterActions>
-                                                    
-                                                </DataTrigger>
-                                                                                                
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-
-                                    <TextBlock Text="✔"
                                                Foreground="White"
-                                               FontSize="14"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"/>
-                                    
-                                </Border>
-                                
-                            </Grid>
+                                               FontSize="18"
+                                               Margin="10,20,0,10"/>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ItemsControl.GroupStyle>
+                    
+                    <!-- GROUP CONTENT -->
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
                             
-                        </Border>
-                        
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            
-            <!-- INSTALL BUTTON -->
-            <Button Content="Install Selected"
-                    Command="{Binding InstallCommand}"
-                    Margin="0,20,0,0"
-                    Height="40"/>
-            
-        </StackPanel>
+                            <!-- ITEMS GROUP -->
+                            <ItemsControl ItemsSource="{Binding Items}">
+
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        
+                                        <!-- CARD -->
+                                        <Border Margin="10"
+                                                Padding="15"
+                                                Width="200"
+                                                CornerRadius="10"
+                                                BorderThickness="2"
+                                                Cursor="Hand">
+                                            
+                                            <!-- CLICK HANDLING -->
+                                            <Border.InputBindings>
+                                                <MouseBinding Gesture="LeftClick"
+                                                              Command="{Binding DataContext.ToggleAppCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                              CommandParameter="{Binding}"/>
+                                            </Border.InputBindings>
+                                            
+                                            <!-- STYLE -->
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background" Value="#2d2d30"/>
+                                                    <Setter Property="BorderBrush" Value="#2d2d30"/>
+
+                                                    <Style.Triggers>
+                                                        
+                                                        <!-- SELECTED -->
+                                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                            <Setter Property="BorderBrush" Value="#3a8dde"/>
+                                                            <Setter Property="Effect">
+                                                                <Setter.Value>
+                                                                    <DropShadowEffect Color="#3a8dde"
+                                                                                      BlurRadius="20"
+                                                                                      ShadowDepth="0"
+                                                                                      Opacity="0.8"/>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </DataTrigger>
+                                                        
+                                                        <!-- HOVER -->
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="BorderBrush" Value="#555"/>
+                                                        </Trigger>
+                                                        
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            
+                                            <!-- CONTENT -->
+                                            <Grid>
+                                                <!-- MAIN -->
+                                                <StackPanel HorizontalAlignment="Center">
+
+                                                    <Image Source="{Binding IconPath}"
+                                                           Width="40"
+                                                           Height="40"
+                                                           Margin="0,0,0,10"/>
+
+                                                    <TextBlock Text="{Binding Name}"
+                                                               Foreground="White"
+                                                               FontSize="14"
+                                                               HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                                
+                                                <!-- OVERLAY -->
+                                                <Border CornerRadius="10"
+                                                        Background="#80000000"
+                                                        IsHitTestVisible="False">
+
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="Opacity" Value="0"/>
+
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                                    <Setter Property="Opacity" Value="0.2"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                </Border>
+                                                
+                                                <!-- CHECKMARK -->
+                                                <Border Width="24"
+                                                        Height="24"
+                                                        Background="#3a8dde"
+                                                        CornerRadius="12"
+                                                        HorizontalAlignment="Right"
+                                                        VerticalAlignment="Top"
+                                                        Margin="5"
+                                                        IsHitTestVisible="False">
+
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="Opacity" Value="0"/>
+                                                            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+
+                                                            <Setter Property="RenderTransform">
+                                                                <Setter.Value>
+                                                                    <ScaleTransform ScaleX="0" ScaleY="0"/>
+                                                                </Setter.Value>
+                                                            </Setter>
+
+                                                            <Style.Triggers>
+                                                                
+                                                                <!-- SELECT -->
+                                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                                    <Setter Property="Opacity" Value="1"/>
+
+                                                                    <DataTrigger.EnterActions>
+                                                                        <BeginStoryboard>
+                                                                            <Storyboard>
+
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                                                                    To="1"
+                                                                                    Duration="0:0:0.2"/>
+
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                                                                    To="1"
+                                                                                    Duration="0:0:0.2"/>
+                                                                                
+                                                                            </Storyboard>
+                                                                        </BeginStoryboard>
+                                                                    </DataTrigger.EnterActions>
+                                                                </DataTrigger>
+                                                                
+                                                                <!-- UNSELECT -->
+                                                                <DataTrigger Binding="{Binding IsSelected}" Value="False">
+                                                                    <Setter Property="Opacity" Value="0"/>
+                                                                    <Setter Property="RenderTransform">
+                                                                        <Setter.Value>
+                                                                            <ScaleTransform ScaleX="0" ScaleY="0"/>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </DataTrigger>
+                                                                
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+
+                                                    <TextBlock Text="✔"
+                                                               Foreground="White"
+                                                               FontSize="14"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"/>
+                                                    
+                                                </Border>
+                                                
+                                            </Grid>
+                                            
+                                        </Border>
+                                        
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                
+                            </ItemsControl>
+                            
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    
+                </ItemsControl>
+                
+                <!-- INSTALL BUTTON -->
+                <Button Content="Install Selected"
+                        Command="{Binding InstallCommand}"
+                        Margin="10,30,10,20"
+                        Height="45"/>
+                
+            </StackPanel>
+
+        </ScrollViewer>
+
     </Grid>
 </UserControl>

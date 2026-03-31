@@ -17,11 +17,19 @@ namespace Preparator
             if (e.ClickCount == 2)
             {
                 ToggleMaximize();
+                return;
             }
-            else
+            
+            if ( WindowState == WindowState.Maximized)
             {
-                DragMove();
+                WindowState = WindowState.Normal;
+
+                var mouseX = e.GetPosition(this).X;
+                Left = mouseX - (Width / 2);
+                Top = 0;
             }
+
+            DragMove();
         }
 
         private void Minimize_Click(object sender, RoutedEventArgs e)

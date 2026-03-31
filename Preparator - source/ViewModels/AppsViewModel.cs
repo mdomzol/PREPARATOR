@@ -1,11 +1,11 @@
 ﻿using Preparator.Helpers;
 using Preparator.Models;
-using Preparator.Views;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Input;
 using System.ComponentModel;
 using System.Windows.Data;
+using System.ComponentModel;
 
 namespace Preparator.ViewModels
 {
@@ -13,7 +13,7 @@ namespace Preparator.ViewModels
     {
         public ObservableCollection<AppItem> Apps { get; set; }
 
-        public ICollectionView AppsView { get; set; }
+        public ICollectionView GroupedApps { get; }
         public ICommand ToggleAppCommand { get; }
         public ICommand InstallCommand { get; }
 
@@ -66,8 +66,8 @@ namespace Preparator.ViewModels
                 new AppItem { Name = "CDBurnerXP", NiniteId = "cdburnerxp", IconPath="/Assets/Icons/cdburnerxp.png" },
             };
 
-            AppsView = CollectionViewSource.GetDefaultView(Apps);
-            AppsView.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
+            GroupedApps = CollectionViewSource.GetDefaultView(Apps);
+            GroupedApps.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
 
             ToggleAppCommand = new RelayCommand(app =>
             {
