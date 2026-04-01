@@ -15,60 +15,67 @@
                       HorizontalScrollBarVisibility="Disabled">
 
             <StackPanel Margin="20">
-                
+
                 <!-- HEADER -->
                 <TextBlock Text="Applications"
                            Foreground="White"
                            FontSize="24"
                            Margin="0,0,0,10"/>
-                
+
                 <!-- COUNT -->
                 <TextBlock Text="{Binding SelectedCount, StringFormat=Selected: {0} apps}"
                            Foreground="White"
                            Opacity="0.7"
                            Margin="0,0,0,20"/>
-                
-                <!-- GROUPED ITEMS -->
+
                 <ItemsControl ItemsSource="{Binding GroupedApps}">
 
-                    <!-- GROUP HEADER -->
+                    <!-- SEKCJE JEDNA POD DRUGĄ -->
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
                     <ItemsControl.GroupStyle>
                         <GroupStyle>
+
+                            <!-- NAZWA SEKCJI -->
                             <GroupStyle.HeaderTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Name}"
-                                               Foreground="White"
-                                               FontSize="18"
-                                               Margin="10,20,0,10"/>
+                               Foreground="White"
+                               FontSize="18"
+                               Margin="10,20,0,10"/>
                                 </DataTemplate>
                             </GroupStyle.HeaderTemplate>
 
+                            <!-- 🔥 ELEMENTY W JEDNYM RZĘDZIE -->
                             <GroupStyle.Panel>
                                 <ItemsPanelTemplate>
-                                    <WrapPanel/>
+                                    <StackPanel Orientation="Horizontal"/>
                                 </ItemsPanelTemplate>
                             </GroupStyle.Panel>
 
                         </GroupStyle>
                     </ItemsControl.GroupStyle>
 
-                    <!-- ELEMENTS -->
+                    <!-- ITEM -->
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
 
-                            <!-- CARD -->
                             <Border Margin="10"
-                                    Padding="15"
-                                    Width="200"
-                                    CornerRadius="10"
-                                    BorderThickness="2"
-                                    Cursor="Hand">
+                    Padding="15"
+                    Width="200"
+                    CornerRadius="10"
+                    BorderThickness="2"
+                    Cursor="Hand">
 
                                 <!-- CLICK -->
                                 <Border.InputBindings>
                                     <MouseBinding Gesture="LeftClick"
-                                                  Command="{Binding DataContext.ToggleAppCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                  CommandParameter="{Binding}"/>
+                                  Command="{Binding DataContext.ToggleAppCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                  CommandParameter="{Binding}"/>
                                 </Border.InputBindings>
 
                                 <!-- STYLE -->
@@ -85,9 +92,9 @@
                                                 <Setter Property="Effect">
                                                     <Setter.Value>
                                                         <DropShadowEffect Color="#3a8dde"
-                                                                          BlurRadius="20"
-                                                                          ShadowDepth="0"
-                                                                          Opacity="0.8"/>
+                                                          BlurRadius="20"
+                                                          ShadowDepth="0"
+                                                          Opacity="0.8"/>
                                                     </Setter.Value>
                                                 </Setter>
                                             </DataTrigger>
@@ -104,24 +111,24 @@
                                 <!-- CONTENT -->
                                 <Grid>
 
-                                    <!-- MAIN -->
                                     <StackPanel HorizontalAlignment="Center">
 
                                         <Image Source="{Binding IconPath}"
-                                               Width="40"
-                                               Height="40"
-                                               Margin="0,0,0,10"/>
+                               Width="40"
+                               Height="40"
+                               Margin="0,0,0,10"/>
 
                                         <TextBlock Text="{Binding Name}"
-                                                   Foreground="White"
-                                                   FontSize="14"
-                                                   HorizontalAlignment="Center"/>
+                                   Foreground="White"
+                                   FontSize="14"
+                                   HorizontalAlignment="Center"/>
+
                                     </StackPanel>
 
                                     <!-- OVERLAY -->
                                     <Border CornerRadius="10"
-                                            Background="#80000000"
-                                            IsHitTestVisible="False">
+                            Background="#80000000"
+                            IsHitTestVisible="False">
 
                                         <Border.Style>
                                             <Style TargetType="Border">
@@ -138,13 +145,13 @@
 
                                     <!-- CHECKMARK -->
                                     <Border Width="24"
-                                            Height="24"
-                                            Background="#3a8dde"
-                                            CornerRadius="12"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Top"
-                                            Margin="5"
-                                            IsHitTestVisible="False">
+                            Height="24"
+                            Background="#3a8dde"
+                            CornerRadius="12"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="5"
+                            IsHitTestVisible="False">
 
                                         <Border.Style>
                                             <Style TargetType="Border">
@@ -165,18 +172,29 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
-                                                                        To="1"
-                                                                        Duration="0:0:0.2"/>
 
                                                                     <DoubleAnimation
-                                                                        Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
-                                                                        To="1"
-                                                                        Duration="0:0:0.2"/>
+                                                        Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                                        To="1"
+                                                        Duration="0:0:0.2"/>
+
+                                                                    <DoubleAnimation
+                                                        Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                                        To="1"
+                                                        Duration="0:0:0.2"/>
+
                                                                 </Storyboard>
                                                             </BeginStoryboard>
                                                         </DataTrigger.EnterActions>
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding IsSelected}" Value="False">
+                                                        <Setter Property="Opacity" Value="0"/>
+                                                        <Setter Property="RenderTransform">
+                                                            <Setter.Value>
+                                                                <ScaleTransform ScaleX="0" ScaleY="0"/>
+                                                            </Setter.Value>
+                                                        </Setter>
                                                     </DataTrigger>
 
                                                 </Style.Triggers>
@@ -184,10 +202,11 @@
                                         </Border.Style>
 
                                         <TextBlock Text="✔"
-                                                   Foreground="White"
-                                                   FontSize="14"
-                                                   HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center"/>
+                                   Foreground="White"
+                                   FontSize="14"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+
                                     </Border>
 
                                 </Grid>
@@ -197,14 +216,14 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
 
-                </ItemsControl>
+                    </ItemsControl>
 
-                <!-- INSTALL BUTTON -->
+                    <!-- INSTALL BUTTON -->
                 <Button Content="Install Selected"
                         Command="{Binding InstallCommand}"
                         Margin="10,30,10,20"
                         Height="45"/>
-                
+
             </StackPanel>
 
         </ScrollViewer>
