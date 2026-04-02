@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Windows.Input;
 using System.ComponentModel;
 using System.Windows.Data;
-using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Preparator.ViewModels
 {
@@ -14,6 +14,7 @@ namespace Preparator.ViewModels
         public ObservableCollection<AppItem> Apps { get; set; }
 
         public ICollectionView GroupedApps { get; }
+        public ICommand ApplyPresetCommand { get; }
         public ICommand ToggleAppCommand { get; }
         public ICommand InstallCommand { get; }
 
@@ -69,6 +70,32 @@ namespace Preparator.ViewModels
             GroupedApps = CollectionViewSource.GetDefaultView(Apps);
             GroupedApps.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
 
+            GroupedApps.Filter = obj =>
+            {
+                if (obj is not AppItem app)
+                    return false;
+
+                if (string.IsNullOrWhiteSpace(SearchText))
+                    return true;
+
+                return app.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
+            };
+
+            ApplyPresetCommand = new RelayCommand(param =>
+            {
+                if (param is not string presetName || !Presets.ContainsKey(presetName))
+                    return;
+
+                var selectedIds = Presets[presetName];
+
+                foreach (var app in Apps)
+                {
+                    app.IsSelected = selectedIds.Contains(app.NiniteId);
+                }
+
+                OnPropertyChanged(nameof(SelectedCount));
+            });
+
             ToggleAppCommand = new RelayCommand(app =>
             {
                 if (app is AppItem item)
@@ -112,6 +139,25 @@ namespace Preparator.ViewModels
                 FileName = url,
                 UseShellExecute = true
             });
+        }
+
+        private Dictionary<string, List<string>> Presets = new()
+        {
+            { "Dev", new() { "vscode", "notepadplusplus", "putty", "winscp" } },
+            { "Basic", new() { "chrome", "7zip", "vlc" } },
+            { "Gaming", new() { "steam", "epicgames", "discord" } }
+        };
+
+        private string _searchText;
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value;
+                OnPropertyChanged();
+                GroupedApps.Refresh();
+            }
         }
     }
 }
