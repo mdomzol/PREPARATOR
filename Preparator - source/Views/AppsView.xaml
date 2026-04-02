@@ -11,7 +11,7 @@
     <!-- RESOURCES -->
     <UserControl.Resources>
 
-        <!-- 🔥 KAFELKI -->
+        <!-- CARD -->
         <DataTemplate x:Key="AppItemTemplate">
             <Border Margin="10"
                     Padding="15"
@@ -210,7 +210,7 @@
                            Opacity="0.7"
                            Margin="0,0,0,20"/>
 
-                <!-- 🔥 GROUPED APPS -->
+                <!-- GROUPED APPS -->
                 <ItemsControl ItemsSource="{Binding GroupedApps}">
 
                     <ItemsControl.ItemsPanel>
@@ -235,7 +235,7 @@
                                                                FontSize="18"
                                                                Margin="10,20,0,10"/>
 
-                                                    <!-- 🔥 ITEMS -->
+                                                    <!-- ITEMS -->
                                                     <ItemsControl ItemsSource="{Binding Items}"
                                                                   ItemTemplate="{StaticResource AppItemTemplate}">
 
