@@ -181,16 +181,17 @@
                                Margin="0,0,10,0"/>
 
                     <Button Content="💻 Dev"
+                            Style="{StaticResource PresetButtonStyle}"
                             Command="{Binding ApplyPresetCommand}"
-                            CommandParameter="Dev"
-                            Margin="0,0,5,0"/>
+                            CommandParameter="Dev"/>
 
                     <Button Content="🏠 Basic"
+                            Style="{StaticResource PresetButtonStyle}"
                             Command="{Binding ApplyPresetCommand}"
-                            CommandParameter="Basic"
-                            Margin="0,0,5,0"/>
+                            CommandParameter="Basic"/>
 
                     <Button Content="🎮 Gaming"
+                            Style="{StaticResource PresetButtonStyle}"
                             Command="{Binding ApplyPresetCommand}"
                             CommandParameter="Gaming"/>
                 </StackPanel>
@@ -262,21 +263,9 @@
                 <!-- INSTALL BUTTON -->
                 <Button Content="{Binding SelectedCount, StringFormat=Install Selected ({0})}"
                         Command="{Binding InstallCommand}"
-                        Margin="10,30,10,20"
-                        Height="45">
-
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="IsEnabled" Value="True"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding SelectedCount}" Value="0">
-                                    <Setter Property="IsEnabled" Value="False"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-
+                        Style="{StaticResource InstallButtonStyle}"
+                        Margin="10,30,10,20"/>
+                
             </StackPanel>
 
         </ScrollViewer>

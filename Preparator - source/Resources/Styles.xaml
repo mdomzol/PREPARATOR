@@ -122,31 +122,78 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="border"
-                        Background="{TemplateBinding Background}"
-                        CornerRadius="15"
-                        RenderTransformOrigin="0.5,0.5">
-                        <Border.RenderTransform>
-                            <ScaleTransform ScaleX="1" ScaleY="1"/>
-                        </Border.RenderTransform>
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
+                    <Grid ClipToBounds="True">
+
+                        <!-- TŁO -->
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="10"
+                                RenderTransformOrigin="0.5,0.5">
+                            <Border.RenderTransform>
+                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                            </Border.RenderTransform>
+                        </Border>
+
+                        <!-- RIPPLE -->
+                        <Ellipse x:Name="ripple"
+                                 Fill="White"
+                                 Opacity="0"
+                                 Width="20"
+                                 Height="20"
+                                 RenderTransformOrigin="0.5,0.5"
+                                 IsHitTestVisible="False">
+                            <Ellipse.RenderTransform>
+                                <ScaleTransform ScaleX="0" ScaleY="0"/>
+                            </Ellipse.RenderTransform>
+                        </Ellipse>
+
+                        <!-- CONTENT -->
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+
+                    </Grid>
+
                     <ControlTemplate.Triggers>
+
+                        <!-- HOVER -->
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#3a3a3a"/>
-                            <Setter TargetName="border" Property="RenderTransform">
-                                <Setter.Value>
-                                    <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
-                                </Setter.Value>
-                            </Setter>
+                            <Setter TargetName="border" Property="Background" Value="#5595e0"/>
                         </Trigger>
+
+                        <!-- CLICK SCALE -->
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="border" Property="RenderTransform">
                                 <Setter.Value>
-                                    <ScaleTransform ScaleX="0.95" ScaleY="0.95"/>
+                                    <ScaleTransform ScaleX="0.97" ScaleY="0.97"/>
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
+
+                        <!-- RIPPLE ANIMATION -->
+                        <EventTrigger RoutedEvent="Button.PreviewMouseLeftButtonDown">
+                            <BeginStoryboard>
+                                <Storyboard>
+
+                                    <!-- SCALE -->
+                                    <DoubleAnimation Storyboard.TargetName="ripple"
+                                                     Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                                     From="0" To="10"
+                                                     Duration="0:0:0.4"/>
+
+                                    <DoubleAnimation Storyboard.TargetName="ripple"
+                                                     Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                                     From="0" To="10"
+                                                     Duration="0:0:0.4"/>
+
+                                    <!-- FADE -->
+                                    <DoubleAnimation Storyboard.TargetName="ripple"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     From="0.4" To="0"
+                                                     Duration="0:0:0.4"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -162,37 +209,81 @@
         <Setter Property="Height" Value="45"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Template">
+        <Setter Property="Template"> 
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="border"
-                        Background="{TemplateBinding Background}"
-                        CornerRadius="10"
-                        RenderTransformOrigin="0.5,0.5">
-                        <Border.RenderTransform>
-                            <ScaleTransform ScaleX="1" ScaleY="1"/>
-                        </Border.RenderTransform>
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
+                    <Grid ClipToBounds="True">
+
+                        <!-- TŁO -->
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="10"
+                                RenderTransformOrigin="0.5,0.5">
+                            <Border.RenderTransform>
+                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                            </Border.RenderTransform>
+                        </Border>
+
+                        <!-- RIPPLE -->
+                        <Ellipse x:Name="ripple"
+                                 Fill="White"
+                                 Opacity="0"
+                                 Width="20"
+                                 Height="20"
+                                 RenderTransformOrigin="0.5,0.5"
+                                 IsHitTestVisible="False">
+                            <Ellipse.RenderTransform>
+                                <ScaleTransform ScaleX="0" ScaleY="0"/>
+                            </Ellipse.RenderTransform>
+                        </Ellipse>
+
+                        <!-- CONTENT -->
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+
+                    </Grid>
+
                     <ControlTemplate.Triggers>
+
+                        <!-- HOVER -->
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="border" Property="Background" Value="#5595e0"/>
-                            <Setter TargetName="border" Property="RenderTransform">
-                                <Setter.Value>
-                                    <ScaleTransform ScaleX="1.02" ScaleY="1.02"/>
-                                </Setter.Value>
-                            </Setter>
                         </Trigger>
+
+                        <!-- CLICK SCALE -->
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="border" Property="RenderTransform">
                                 <Setter.Value>
-                                    <ScaleTransform ScaleX="0.95" ScaleY="0.95"/>
+                                    <ScaleTransform ScaleX="0.97" ScaleY="0.97"/>
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
-                        <DataTrigger Binding="{Binding SelectedCount}" Value="0">
-                            <Setter TargetName="border" Property="Background" Value="#555"/>
-                        </DataTrigger>
+
+                        <!-- RIPPLE ANIMATION -->
+                        <EventTrigger RoutedEvent="Button.PreviewMouseLeftButtonDown">
+                            <BeginStoryboard>
+                                <Storyboard>
+
+                                    <!-- SCALE -->
+                                    <DoubleAnimation Storyboard.TargetName="ripple"
+                                                     Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                                     From="0" To="15"
+                                                     Duration="0:0:0.4"/>
+
+                                    <DoubleAnimation Storyboard.TargetName="ripple"
+                                                     Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                                     From="0" To="15"
+                                                     Duration="0:0:0.4"/>
+
+                                    <!-- FADE -->
+                                    <DoubleAnimation Storyboard.TargetName="ripple"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     From="0.4" To="0"
+                                                     Duration="0:0:0.4"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
