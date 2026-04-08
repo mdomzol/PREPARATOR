@@ -17,6 +17,9 @@ namespace Preparator.ViewModels
         public ICommand ApplyPresetCommand { get; }
         public ICommand ToggleAppCommand { get; }
         public ICommand InstallCommand { get; }
+        public ICommand ClearSelectionCommand { get; }
+
+        public List<string> PresetNames => Presets.Keys.ToList();
 
         public AppsViewModel()
         {
@@ -55,7 +58,7 @@ namespace Preparator.ViewModels
 
                 // OFFICE
                 new AppItem { Name = "LibreOffice", NiniteId = "libreoffice", Category = "Office", IconPath = "/Assets/Icons/libreoffice.png" },
-                new AppItem { Name = "OpenOffice", NiniteId = "openffice", Category = "Office", IconPath = "/Assets/Icons/openoffice.png" },
+                new AppItem { Name = "OpenOffice", NiniteId = "openoffice", Category = "Office", IconPath = "/Assets/Icons/openoffice.png" },
 
                 // DEV
                 new AppItem { Name="VS Code", NiniteId="vscode", Category="Development", IconPath = "/Assets/Icons/vscode.png" },
@@ -121,6 +124,8 @@ namespace Preparator.ViewModels
             }
 
             InstallCommand = new RelayCommand(_ => Install());
+
+            ClearSelectionCommand = new RelayCommand(_ => ClearSelection());
         }
 
         public int SelectedCount => Apps.Count(a => a.IsSelected);
@@ -171,6 +176,18 @@ namespace Preparator.ViewModels
                 _activePreset = value;
                 OnPropertyChanged();
             }
+        }
+
+        private void ClearSelection()
+        {
+            foreach (var app in Apps)
+            {
+                app.IsSelected = false;
+            }
+
+            ActivePreset = null;
+
+            OnPropertyChanged(nameof(SelectedCount));
         }
     }
 }
