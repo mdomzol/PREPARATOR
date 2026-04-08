@@ -181,16 +181,19 @@
                                Margin="0,0,10,0"/>
 
                     <Button Content="💻 Dev"
+                            Tag="Dev"
                             Style="{StaticResource PresetButtonStyle}"
                             Command="{Binding ApplyPresetCommand}"
                             CommandParameter="Dev"/>
 
                     <Button Content="🏠 Basic"
+                            Tag="Basic"
                             Style="{StaticResource PresetButtonStyle}"
                             Command="{Binding ApplyPresetCommand}"
                             CommandParameter="Basic"/>
 
                     <Button Content="🎮 Gaming"
+                            Tag="Gaming"
                             Style="{StaticResource PresetButtonStyle}"
                             Command="{Binding ApplyPresetCommand}"
                             CommandParameter="Gaming"/>

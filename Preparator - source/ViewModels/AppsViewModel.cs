@@ -86,6 +86,8 @@ namespace Preparator.ViewModels
                 if (param is not string presetName || !Presets.ContainsKey(presetName))
                     return;
 
+                ActivePreset = presetName;
+
                 var selectedIds = Presets[presetName];
 
                 foreach (var app in Apps)
@@ -157,6 +159,17 @@ namespace Preparator.ViewModels
                 _searchText = value;
                 OnPropertyChanged();
                 GroupedApps.Refresh();
+            }
+        }
+
+        private string _activePreset;
+        public string ActivePreset
+        {
+            get => _activePreset;
+            set
+            {
+                _activePreset = value;
+                OnPropertyChanged();
             }
         }
     }
