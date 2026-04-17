@@ -13,6 +13,8 @@
     <UserControl.Resources>
 
         <helpers:ActivePresetToBoolConverter x:Key="ActivePresetToBoolConverter"/>
+        <helpers:PercentToWidthConverter x:Key="PercentToWidthConverter"/>
+        <helpers:ChartConverter x:Key="ChartConverter"/>
 
         <!-- CARD -->
         <DataTemplate x:Key="AppItemTemplate">
@@ -167,6 +169,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0"
@@ -339,6 +342,67 @@
             </StackPanel>
 
         </ScrollViewer>
+
+        <Border Grid.Row="2"
+                Background="#252526"
+                Padding="10"
+                BorderBrush="#333"
+                BorderThickness="1,1,0,0">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- LEFT SIDE LIFE STATS -->
+                <StackPanel Margin="10">
+
+                    <TextBlock Text="Network Activity"
+                               Foreground="White"
+                               FontSize="14"
+                               Margin="0,0,0,5"/>
+
+                    <Canvas Height="80">
+
+                        <Polyline Stroke="#3a8dde"
+                                  StrokeThickness="2"
+                                  Points="{Binding Stats.DownloadHistory, Converter={StaticResource ChartConverter}}"/>
+                    </Canvas>
+                    
+                    <!-- SPEED -->
+                    <TextBlock Text="{Binding Stats.Download}"
+                               Foreground="White"
+                               FontSize="16"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+                
+                <!-- RIGHT SIDE LOGS -->
+                <Border Grid.Column="1"
+                        Background="#1e1e1e"
+                        CornerRadius="8"
+                        Margin="10"
+                        Padding="10">
+
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+
+                        <ItemsControl ItemsSource="{Binding InstallLogs}">
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}"
+                                               Foreground="#cccccc"
+                                               FontSize="13"
+                                               Margin="0,2"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            
+                        </ItemsControl>
+                        
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+        </Border>
 
     </Grid>
     

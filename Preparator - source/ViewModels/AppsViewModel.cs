@@ -1,5 +1,6 @@
 ﻿using Preparator.Helpers;
 using Preparator.Models;
+using Preparator.Services;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Input;
@@ -18,11 +19,17 @@ namespace Preparator.ViewModels
         public ICommand ToggleAppCommand { get; }
         public ICommand InstallCommand { get; }
         public ICommand ClearSelectionCommand { get; }
+        public ObservableCollection<string> InstallLogs { get; } = new(); 
+        private readonly NiniteService _niniteService;
 
         public List<string> PresetNames => Presets.Keys.ToList();
 
         public AppsViewModel()
         {
+            _niniteService = new NiniteService();
+
+            _niniteService.OutputReceived += OnOutputReceived;
+
             Apps = new ObservableCollection<AppItem>
             {
                 // BROWSERS
@@ -146,6 +153,28 @@ namespace Preparator.ViewModels
                 FileName = url,
                 UseShellExecute = true
             });
+        }
+
+        private void OnOutputReceived(string line)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                InstallLogs.Add(ParseLog(line));
+            });
+        }
+
+        private string ParseLog(string line)
+        {
+            if (line.Contains("Installing"))
+                return $"🔧 {line}";
+
+            if (line.Contains("Downloading"))
+                return $"⬇ {line}";
+
+            if (line.Contains("Complete"))
+                return $"✔ {line}";
+
+            return null;
         }
 
         private Dictionary<string, List<string>> Presets = new()
