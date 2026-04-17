@@ -198,7 +198,8 @@
                                     Margin="5"
                                     CornerRadius="12"
                                     Background="#2d2d30"
-                                    Cursor="Hand">
+                                    Cursor="Hand"
+                                    Tag="{Binding}">
 
                                 <Border.InputBindings>
                                     <MouseBinding Gesture="LeftClick"
