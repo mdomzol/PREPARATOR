@@ -22,8 +22,8 @@ public class SystemStatsViewModel : INotifyPropertyChanged
     private const double SmoothFactor = 0.3;
 
     public ObservableCollection<double> DownloadHistory { get; } = new();
-    public ObservableCollection<double> DiskHistory { get; } = new();
-    private const int MaxPoints = 30;
+    public ObservableCollection<double> DiskReadHistory { get; } = new();
+    public ObservableCollection<double> DiskWriteHistory { get; } = new();
 
     private double _downloadValue;
     public double DownloadValue
@@ -62,6 +62,18 @@ public class SystemStatsViewModel : INotifyPropertyChanged
         set { _diskWrite = value; OnPropertyChanged(); }
     }
 
+    public double MaxValue =>
+    new[]
+    {
+        DownloadHistory.DefaultIfEmpty(0).Max(),
+        DiskReadHistory.DefaultIfEmpty(0).Max(),
+        DiskWriteHistory.DefaultIfEmpty(0).Max()
+    }.Max();
+
+    public string MaxValueFormatted => FormatBytes(MaxValue);
+
+    private const int MaxPoints = 30;
+
     public SystemStatsViewModel()
     {
         var category = new PerformanceCounterCategory("Network Interface");
@@ -97,9 +109,6 @@ public class SystemStatsViewModel : INotifyPropertyChanged
 
         DownloadHistory.Add(_smoothDownload);
 
-        if (DownloadHistory.Count > MaxPoints)
-            DownloadHistory.RemoveAt(0);
-
         // DISK STATS
         var diskRead = _diskReadCounter.NextValue();
         var diskWrite = _diskWriteCounter.NextValue();
@@ -110,11 +119,27 @@ public class SystemStatsViewModel : INotifyPropertyChanged
         DiskRead = FormatBytes(_smoothDiskRead);
         DiskWrite = FormatBytes(_smoothDiskWrite);
 
-        DiskHistory.Add(_smoothDiskRead);
+        DiskReadHistory.Add(_smoothDiskRead);
+        DiskWriteHistory.Add(_smoothDiskWrite);
 
-        if (DiskHistory.Count > MaxPoints)
-            DiskHistory.RemoveAt(0);
+        DiskReadHistory.Add(diskRead);
+        if (DiskReadHistory.Count > MaxPoints)
+            DiskReadHistory.RemoveAt(0);
+
+        DiskWriteHistory.Add(diskWrite);
+        if (DiskWriteHistory.Count > MaxPoints)
+            DiskWriteHistory.RemoveAt(0);
+
+        DownloadHistory.Add(_smoothDownload);
+        if (DownloadHistory.Count > MaxPoints)
+            DownloadHistory.RemoveAt(0);
+
+        OnPropertyChanged(nameof(DownloadHistory));
+        OnPropertyChanged(nameof(DiskReadHistory));
+        OnPropertyChanged(nameof(DiskWriteHistory));
     }
+
+
 
     private double Smooth(double previous, double current)
     {

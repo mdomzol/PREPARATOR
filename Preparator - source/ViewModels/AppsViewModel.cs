@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Windows.Input;
 using System.ComponentModel;
 using System.Windows.Data;
-using System.Runtime.CompilerServices;
 
 namespace Preparator.ViewModels
 {
@@ -19,6 +18,7 @@ namespace Preparator.ViewModels
         public ICommand ToggleAppCommand { get; }
         public ICommand InstallCommand { get; }
         public ICommand ClearSelectionCommand { get; }
+        public SystemStatsViewModel Stats { get; } = new SystemStatsViewModel();
         public ObservableCollection<string> InstallLogs { get; } = new(); 
         private readonly NiniteService _niniteService;
 
@@ -114,7 +114,7 @@ namespace Preparator.ViewModels
                 {
                     item.IsSelected = !item.IsSelected;
 
-                    OnPropertyChanged(nameof(Apps)); // 🔥 refresh UI
+                    OnPropertyChanged(nameof(Apps));
                     OnPropertyChanged(nameof(SelectedCount));
                 }
             });

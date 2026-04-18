@@ -17,7 +17,7 @@ namespace Preparator.Helpers
             var points = new PointCollection();
 
             double widthStep = 6;
-            double max = values.Max();
+            var max = Math.Max(values.Max(), 1);
             if (max == 0)
                 max = 1;
 
