@@ -399,12 +399,22 @@
                             Padding="5">
 
                         <Grid>
-                            <Canvas x:Name="ChartCanvas" Height="100" ClipToBounds="True">
+                            <Canvas x:Name="ChartCanvas"
+                                    Height="120"
+                                    ClipToBounds="True">
 
                                 <!-- GRID LINES -->
-                                <Line X1="0" Y1="25" X2="300" Y2="25" Stroke="#333" StrokeThickness="1"/>
-                                <Line X1="0" Y1="50" X2="300" Y2="50" Stroke="#333" StrokeThickness="1"/>
-                                <Line X1="0" Y1="75" X2="300" Y2="75" Stroke="#333" StrokeThickness="1"/>
+                                <ItemsControl ItemsSource="{Binding Gridlines}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Line X1="0"
+                                                  X2="{Binding ElementName=ChartCanvas, Path=ActualWidth}"
+                                                  Y1="{Binding}"
+                                                  Y2="{Binding}"
+                                                  Stroke="#333"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
 
                                 <!-- NETWORK -->
                                 <Polyline Stroke="#3a8dde"
@@ -421,23 +431,20 @@
                                       StrokeThickness="2"
                                       Points="{Binding Stats.DiskWriteHistory, Converter={StaticResource ChartConverter}}"/>
                             </Canvas>
-                            
-                            <!-- SCALE -->
-                            <StackPanel VerticalAlignment="Stretch"
-                                        HorizontalAlignment="Right"
-                                        Margin="0,0,5,0">
 
-                                <TextBlock Text="{Binding Stats.MaxValueFormatted}"
-                                           Foreground="#888"
-                                           FontSize="10"/>
+                            <Grid VerticalAlignment="Bottom" Margin="0,0,0,2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
 
-                                <TextBlock Text=" "
-                                           Height="60"/>
-
-                                <TextBlock Text="0"
-                                           Foreground="#888"
-                                           FontSize="10"/>
-                            </StackPanel>
+                                <TextBlock Text="-30s" Foreground="#888" Grid.Column="0"/>
+                                <TextBlock Text="-20s" Foreground="#888" Grid.Column="1" HorizontalAlignment="Center"/>
+                                <TextBlock Text="-10s" Foreground="#888" Grid.Column="2" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Now" Foreground="#888" Grid.Column="3" HorizontalAlignment="Right"/>
+                            </Grid>
                         </Grid>
 
                     </Border>
