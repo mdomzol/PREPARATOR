@@ -399,9 +399,26 @@
                             Padding="5">
 
                         <Grid>
+
                             <Canvas x:Name="ChartCanvas"
+                                    MouseMove="Chart_MouseMove"
                                     Height="120"
                                     ClipToBounds="True">
+
+                                <Canvas.RenderTransform>
+                                    <TranslateTransform X="{Binding Stats.Offset}"/>
+                                </Canvas.RenderTransform>
+
+                                <Border x:Name="Tooltip"
+                                        Background="#333"
+                                        Padding="5"
+                                        CornerRadius="4"
+                                        Visibility="Collapsed">
+
+                                    <TextBlock x:Name="TooltipText"
+                                               Foreground="White"
+                                               FontSize="12"/>
+                                </Border>
 
                                 <!-- GRID LINES -->
                                 <ItemsControl ItemsSource="{Binding Gridlines}">

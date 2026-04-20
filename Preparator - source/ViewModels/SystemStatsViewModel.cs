@@ -1,8 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using Preparator.ViewModels;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 public class SystemStatsViewModel : INotifyPropertyChanged
@@ -74,6 +77,13 @@ public class SystemStatsViewModel : INotifyPropertyChanged
 
     private const int MaxPoints = 30;
 
+    private double _offset;
+    public double Offset
+    {
+        get => _offset;
+        set { _offset = value; OnPropertyChanged(); }
+    }
+
     public SystemStatsViewModel()
     {
         var category = new PerformanceCounterCategory("Network Interface");
@@ -94,6 +104,8 @@ public class SystemStatsViewModel : INotifyPropertyChanged
 
     private void Update(object sender, EventArgs e)
     {
+        Offset =- 1;
+
         // NET STATS
         var rawDownload = _downloadCounter.NextValue();
         var rawUpload = _uploadCounter.NextValue();
