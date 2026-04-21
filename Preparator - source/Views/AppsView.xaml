@@ -382,12 +382,8 @@
                         <Canvas x:Name="ChartCanvas"
                                 Height="120"
                                 ClipToBounds="True"
-                                MouseMove="Chart_MouseMove">
-
-                            <Canvas.RenderTransform>
-                                <TranslateTransform X="{Binding Stats.Offset}"/>
-                            </Canvas.RenderTransform>
-
+                                MouseMove="Chart_MouseMove"
+                                MouseLeave="Chart_MouseLeave">
 
                             <!-- NETWORK -->
                             <Polyline Stroke="#3a8dde"

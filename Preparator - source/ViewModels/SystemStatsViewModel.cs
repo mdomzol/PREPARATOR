@@ -1,10 +1,7 @@
-﻿using Preparator.ViewModels;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Threading;
 
 public class SystemStatsViewModel : INotifyPropertyChanged
@@ -15,7 +12,6 @@ public class SystemStatsViewModel : INotifyPropertyChanged
     private readonly DispatcherTimer _timer;
 
     private double _smoothDownload = 0;
-    private double _smoothUpload = 0;
     private double _smoothDiskWrite = 0;
 
     private const double SmoothFactor = 0.3;
@@ -96,15 +92,13 @@ public class SystemStatsViewModel : INotifyPropertyChanged
         _diskWriteCounter = new PerformanceCounter("PhysicalDisk", "Disk Write Bytes/sec", "_Total");
 
         _timer = new DispatcherTimer();
-        _timer.Interval = TimeSpan.FromSeconds(1);
+        _timer.Interval = TimeSpan.FromMilliseconds(500);
         _timer.Tick += Update;
         _timer.Start();
     }
 
     private void Update(object sender, EventArgs e)
     {
-        Offset = 0;
-
         // NET
         var rawDownload = _downloadCounter.NextValue();
 

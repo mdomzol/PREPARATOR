@@ -25,23 +25,48 @@ namespace Preparator.Views
 
             double ratio = pos.X / ChartCanvas.ActualWidth;
 
-            int index = (int)(ratio * (stats.DownloadHistory.Count - 1));
+            int maxCount = Math.Min(
+                stats.DownloadHistory.Count,
+                stats.DiskWriteHistory.Count
+            );
 
-            index = Math.Clamp(index, 0, stats.DownloadHistory.Count - 1);
+            int index = (int)(ratio * (maxCount - 1));
+            index = Math.Clamp(index, 0, maxCount - 1);
 
             var net = stats.DownloadHistory[index];
             var disk = stats.DiskWriteHistory.ElementAtOrDefault(index);
 
+            string netText = FormatBytes(net);
+            string diskText = FormatBytes(disk);
+
             TooltipText.Text =
-                $"Network: {net / 1024 / 1024:0.##} MB/s\n" +
-                $"Disk: {disk / 1024 / 1024:0.##} MB/s";
+                $"Network: {netText}\nDisk: {diskText}";
 
             Canvas.SetLeft(Tooltip, pos.X + 12);
             Canvas.SetTop(Tooltip, pos.Y - 20);
 
             Tooltip.Visibility = Visibility.Visible;
 
-            Panel.SetZIndex(Tooltip, 999); // 🔥 FIX: nie znika pod UI
+            Panel.SetZIndex(Tooltip, 999);
+        }
+
+        private void Chart_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Tooltip.Visibility = Visibility.Collapsed;
+        }
+
+        private string FormatBytes(double bytes)
+        {
+            string[] sizes = { "B/s", "KB/s", "MB/s", "GB/s" };
+            int order = 0;
+
+            while (bytes >= 1024 && order < sizes.Length - 1)
+            {
+                order++;
+                bytes /= 1024;
+            }
+
+            return $"{bytes:0.##} {sizes[order]}";
         }
     }
 }
