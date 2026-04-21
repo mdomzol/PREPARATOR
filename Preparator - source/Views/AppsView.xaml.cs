@@ -15,23 +15,33 @@ namespace Preparator.Views
 
         private void Chart_MouseMove(object sender, MouseEventArgs e)
         {
-            var pos = e.GetPosition(ChartCanvas);
-
             var vm = (AppsViewModel)DataContext;
             var stats = vm.Stats;
 
-            int index = (int)(pos.X / ChartCanvas.ActualWidth * stats.DownloadHistory.Count);
+            var pos = e.GetPosition(ChartCanvas);
 
-            if (index >= 0 && index < stats.DownloadHistory.Count)
-            {
-                var value = stats.DownloadHistory[index];
+            if (stats.DownloadHistory.Count < 2)
+                return;
 
-                TooltipText.Text = $"{value / 1024 / 1024:0##} MB/s";
-                Canvas.SetLeft(Tooltip, pos.X + 10);
-                Canvas.SetTop(Tooltip, pos.Y - 20);
+            double ratio = pos.X / ChartCanvas.ActualWidth;
 
-                Tooltip.Visibility = Visibility.Visible;
-            }
+            int index = (int)(ratio * (stats.DownloadHistory.Count - 1));
+
+            index = Math.Clamp(index, 0, stats.DownloadHistory.Count - 1);
+
+            var net = stats.DownloadHistory[index];
+            var disk = stats.DiskWriteHistory.ElementAtOrDefault(index);
+
+            TooltipText.Text =
+                $"Network: {net / 1024 / 1024:0.##} MB/s\n" +
+                $"Disk: {disk / 1024 / 1024:0.##} MB/s";
+
+            Canvas.SetLeft(Tooltip, pos.X + 12);
+            Canvas.SetTop(Tooltip, pos.Y - 20);
+
+            Tooltip.Visibility = Visibility.Visible;
+
+            Panel.SetZIndex(Tooltip, 999); // 🔥 FIX: nie znika pod UI
         }
     }
 }

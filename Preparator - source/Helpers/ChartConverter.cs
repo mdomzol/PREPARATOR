@@ -11,14 +11,17 @@ namespace Preparator.Helpers
         {
             var data = values[0] as IEnumerable<double>;
             var width = values[1] as double? ?? 300;
-            var max = values[2] as double? ?? 1;
+            var max = values.Length > 2 ? (values[2] as double? ?? 1) : 1;
 
             if (data == null || !data.Any())
                 return new PointCollection();
 
+            if (max <= 0) max = 1;
+
             var points = new PointCollection();
 
-            double height = 60;
+            double height = 120;
+
             int count = data.Count();
             double step = width / Math.Max(count - 1, 1);
 

@@ -273,10 +273,10 @@
                             Command="{Binding InstallCommand}"
                             Style="{StaticResource InstallButtonStyle}"/>
                 </Grid>
-                
+
             </StackPanel>
         </Border>
-        
+
         <!-- SCROLL VIEWER -->
         <ScrollViewer Grid.Row="1"
                       VerticalScrollBarVisibility="Auto"
@@ -352,164 +352,148 @@
 
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="40"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- LEFT SIDE LIFE STATS -->
-                <Grid Margin="10">
+                <!-- ================= LEFT SCALE ================= -->
+                <StackPanel Grid.Column="0"
+                            VerticalAlignment="Stretch"
+                            Margin="5">
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+                    <TextBlock Text="{Binding Stats.MaxDownload, StringFormat={}{0:0.#}}"
+                               Foreground="#3a8dde"/>
 
-                    <!-- LEGEND -->
-                    <StackPanel Grid.Row="0"
-                                Orientation="Horizontal" 
-                                Margin="0,0,0,8">
-                        
-                        <!-- NETWORK -->
-                        <StackPanel Orientation="Horizontal" Margin="0,0,15,0">
-                            <Ellipse Width="10" Height="10" Fill="#3a8dde" Margin="0,0,5,0"/>
-                            <TextBlock Text="Network:"
-                                       Foreground="White"
-                                       Margin="0,0,5,0"/>
-                            <TextBlock Text="{Binding Stats.Download}"
-                                       Foreground="White"/>
-                        </StackPanel>
+                    <TextBlock Text="0"
+                               Foreground="#3a8dde"
+                               VerticalAlignment="Bottom"
+                               Margin="0,80,0,0"/>
+                </StackPanel>
 
-                        <!-- DISK WRITE -->
-                        <StackPanel Orientation="Horizontal">
-                            <Ellipse Width="10" Height="10" Fill="#f44336" Margin="0,0,5,0"/>
-                            <TextBlock Text="Write:"
-                                       Foreground="White"
-                                       Margin="0,0,5,0"/>
-                            <TextBlock Text="{Binding Stats.DiskWrite}"
-                                       Foreground="#f44336"/>
-                        </StackPanel>
-                        
-                    </StackPanel>
-                    
-                    <!-- LIVE GRAPH -->
-                    <Border Grid.Row="1"
-                            Background="#1e1e1e"
-                            CornerRadius="8"
-                            Padding="5">
+                <!-- ================= CHART AREA ================= -->
+                <Grid Grid.Column="1">
 
-                        <Grid>
+                    <!-- CANVAS WRAPPER -->
+                    <Border Background="#1e1e1e"
+                            CornerRadius="6"
+                            ClipToBounds="True">
 
-                            <Canvas x:Name="ChartCanvas"
-<<<<<<< HEAD
-                                    VerticalAlignment="Stretch"
-                                    MinHeight="80"
-=======
-                                    MouseMove="Chart_MouseMove"
-                                    Height="120"
->>>>>>> 4d9420e4c24cd27c801958ec58786bbb1a2ddd58
-                                    ClipToBounds="True">
+                        <Canvas x:Name="ChartCanvas"
+                                Height="120"
+                                ClipToBounds="True"
+                                MouseMove="Chart_MouseMove">
 
-                                <Canvas.RenderTransform>
-                                    <TranslateTransform X="{Binding Stats.Offset}"/>
-                                </Canvas.RenderTransform>
+                            <Canvas.RenderTransform>
+                                <TranslateTransform X="{Binding Stats.Offset}"/>
+                            </Canvas.RenderTransform>
 
-                                <Border x:Name="Tooltip"
-                                        Background="#333"
-                                        Padding="5"
-                                        CornerRadius="4"
-                                        Visibility="Collapsed">
 
-                                    <TextBlock x:Name="TooltipText"
-                                               Foreground="White"
-                                               FontSize="12"/>
-                                </Border>
+                            <!-- NETWORK -->
+                            <Polyline Stroke="#3a8dde"
+                                      StrokeThickness="2">
+                                <Polyline.Points>
+                                    <MultiBinding Converter="{StaticResource ChartConverter}">
+                                        <Binding Path="Stats.DownloadHistory"/>
+                                        <Binding ElementName="ChartCanvas" Path="ActualWidth"/>
+                                        <Binding Path="Stats.MaxDownload"/>
+                                    </MultiBinding>
+                                </Polyline.Points>
+                            </Polyline>
 
-                                <!-- GRID LINES -->
-                                <ItemsControl ItemsSource="{Binding Gridlines}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Line X1="0"
-                                                  X2="{Binding ElementName=ChartCanvas, Path=ActualWidth}"
-                                                  Y1="{Binding}"
-                                                  Y2="{Binding}"
-                                                  Stroke="#333"/>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                            <!-- DISK -->
+                            <Polyline Stroke="#f44336"
+                                      StrokeThickness="2">
+                                <Polyline.Points>
+                                    <MultiBinding Converter="{StaticResource ChartConverter}">
+                                        <Binding Path="Stats.DiskWriteHistory"/>
+                                        <Binding ElementName="ChartCanvas" Path="ActualWidth"/>
+                                        <Binding Path="Stats.MaxDisk"/>
+                                    </MultiBinding>
+                                </Polyline.Points>
+                            </Polyline>
 
-                                <!-- NETWORK -->
-                                <Polyline Stroke="#3a8dde" 
-                                          StrokeThickness="2">
-                                    <Polyline.Points>
-                                        <MultiBinding Converter="{StaticResource ChartConverter}">
-                                            <Binding Path="Stats.DownloadHistory"/>
-                                            <Binding ElementName="ChartCanvas" Path="ActualWidth"/>
-                                            <Binding Path="Stats.MaxDownload"/>
-                                        </MultiBinding>
-                                    </Polyline.Points>
-                                </Polyline>
+                            <!-- TOOLTIP -->
+                            <Border x:Name="Tooltip"
+                                    Background="#333"
+                                    Padding="5"
+                                    CornerRadius="4"
+                                    Visibility="Collapsed"
+                                    Panel.ZIndex="999">
 
-                                <!-- DISK WRITE -->
-                                <Polyline Stroke="#f44336"
-                                          StrokeThickness="2">
-                                    <Polyline.Points>
-                                        <MultiBinding Converter="{StaticResource ChartConverter}">
-                                            <Binding Path="Stats.DiskWriteHistory"/>
-                                            <Binding ElementName="ChartCanvas" Path="ActualWidth"/>
-                                            <Binding Path="Stats.MaxDisk"/>
-                                        </MultiBinding>
-                                    </Polyline.Points>
-                                </Polyline>
-                                      
-                            </Canvas>
+                                <TextBlock x:Name="TooltipText"
+                                           Foreground="White"/>
 
-                            <Grid VerticalAlignment="Bottom" 
-                                  Margin="0,0,0,2">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
+                            </Border>
 
-                                <TextBlock Text="-30s" Foreground="#888" Grid.Column="0"/>
-                                <TextBlock Text="-20s" Foreground="#888" Grid.Column="1" HorizontalAlignment="Center"/>
-                                <TextBlock Text="-10s" Foreground="#888" Grid.Column="2" HorizontalAlignment="Center"/>
-                                <TextBlock Text="Now" Foreground="#888" Grid.Column="3" HorizontalAlignment="Right"/>
-                            </Grid>
-                        </Grid>
+                        </Canvas>
 
                     </Border>
-                    
+
+                    <!-- OVERLAY LEGEND (TOP LEFT) -->
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Margin="8"
+                                Panel.ZIndex="10">
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,15,0">
+                            <Ellipse Width="10" Height="10" Fill="#3a8dde" Margin="0,0,5,0"/>
+                            <TextBlock Text="Network:" Foreground="White"/>
+                            <TextBlock Text="{Binding Stats.Download}" Foreground="#3a8dde"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="10" Height="10" Fill="#f44336" Margin="0,0,5,0"/>
+                            <TextBlock Text="Disk:" Foreground="White"/>
+                            <TextBlock Text="{Binding Stats.DiskWrite}" Foreground="#f44336"/>
+                        </StackPanel>
+
+                    </StackPanel>
+
                 </Grid>
-                
-                <!-- RIGHT SIDE LOGS -->
-                <Border Grid.Column="1"
-                        Background="#1e1e1e"
-                        CornerRadius="8"
-                        Margin="10"
-                        Padding="10">
 
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <!-- ================= RIGHT SCALE ================= -->
+                <StackPanel Grid.Column="2"
+                            VerticalAlignment="Stretch"
+                            Margin="5">
 
-                        <ItemsControl ItemsSource="{Binding InstallLogs}">
+                    <TextBlock Text="{Binding Stats.MaxDisk, StringFormat={}{0:0.#}}"
+                               Foreground="#f44336"/>
 
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding}"
-                                               Foreground="#cccccc"
-                                               FontSize="13"
-                                               Margin="0,2"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                            
-                        </ItemsControl>
-                        
-                    </ScrollViewer>
-                </Border>
+                    <TextBlock Text="0"
+                               Foreground="#f44336"
+                               VerticalAlignment="Bottom"
+                               Margin="0,80,0,0"/>
+
+                </StackPanel>
+
             </Grid>
+
+        </Border>
+
+        <!-- RIGHT SIDE LOGS -->
+        <Border Grid.Column="1"
+                Background="#1e1e1e"
+                CornerRadius="8"
+                Margin="10"
+                Padding="10">
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding InstallLogs}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}"
+                                       Foreground="#cccccc"
+                                       FontSize="13"
+                                       Margin="0,2"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
         </Border>
 
     </Grid>
-    
+
 </UserControl>
