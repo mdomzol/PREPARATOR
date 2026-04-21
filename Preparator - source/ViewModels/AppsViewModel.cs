@@ -12,7 +12,6 @@ namespace Preparator.ViewModels
     public class AppsViewModel : BaseViewModel
     {
         public ObservableCollection<AppItem> Apps { get; set; }
-
         public ICollectionView GroupedApps { get; }
         public ICommand ApplyPresetCommand { get; }
         public ICommand ToggleAppCommand { get; }
@@ -22,10 +21,12 @@ namespace Preparator.ViewModels
         public ObservableCollection<string> InstallLogs { get; } = new(); 
         private readonly NiniteService _niniteService;
 
-        public List<string> PresetNames => Presets.Keys.ToList();
+        public ObservableCollection<string> PresetNames { get; }
 
         public AppsViewModel()
         {
+            PresetNames = new ObservableCollection<string>(Presets.Keys);
+
             _niniteService = new NiniteService();
 
             _niniteService.OutputReceived += OnOutputReceived;
@@ -135,6 +136,13 @@ namespace Preparator.ViewModels
             ClearSelectionCommand = new RelayCommand(_ => ClearSelection());
         }
 
+        private Dictionary<string, List<string>> Presets = new()
+        {
+            { "Dev", new() { "vscode", "notepadplusplus", "putty", "winscp" } },
+            { "Basic", new() { "chrome", "7zip", "vlc" } },
+            { "Gaming", new() { "steam", "epicgames", "discord" } }
+        };
+
         public int SelectedCount => Apps.Count(a => a.IsSelected);
 
         public List<double> Gridlines { get; } = new()
@@ -185,13 +193,6 @@ namespace Preparator.ViewModels
 
             return null;
         }
-
-        private Dictionary<string, List<string>> Presets = new()
-        {
-            { "Dev", new() { "vscode", "notepadplusplus", "putty", "winscp" } },
-            { "Basic", new() { "chrome", "7zip", "vlc" } },
-            { "Gaming", new() { "steam", "epicgames", "discord" } }
-        };
 
         private string _searchText;
         public string SearchText

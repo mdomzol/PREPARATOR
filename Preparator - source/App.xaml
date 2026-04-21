@@ -11,6 +11,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <helpers:StringToBoolConverter x:Key="StringToBoolConverter"/>
+            <helpers:ActivePresetToBoolConverter x:Key="ActivePresetToBoolConverter"/>
         </ResourceDictionary>         
     </Application.Resources>
 

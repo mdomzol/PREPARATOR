@@ -4,17 +4,13 @@
              xmlns:vm="clr-namespace:Preparator.ViewModels"
              xmlns:helpers="clr-namespace:Preparator.Helpers">
 
-    <!-- DATA CONTEXT -->
-    <UserControl.DataContext>
-        <vm:AppsViewModel/>
-    </UserControl.DataContext>
-
     <!-- RESOURCES -->
     <UserControl.Resources>
 
         <helpers:ActivePresetToBoolConverter x:Key="ActivePresetToBoolConverter"/>
         <helpers:PercentToWidthConverter x:Key="PercentToWidthConverter"/>
         <helpers:ChartConverter x:Key="ChartConverter"/>
+        <helpers:ChartAreaConverter x:Key="ChartAreaConverter"/>
 
         <!-- CARD -->
         <DataTemplate x:Key="AppItemTemplate">
@@ -167,10 +163,16 @@
     <Grid Background="#1e1e1e">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/> <!-- HEADER -->
+            <RowDefinition Height="*"/> <!-- MAIN -->
+            <RowDefinition Height="180"/> <!-- FOOTER-->
         </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="320"/> <!-- LOGS -->
+        </Grid.ColumnDefinitions>
+            
 
         <Border Grid.Row="0"
                 Background="#252526"
@@ -187,7 +189,9 @@
                            Margin="0,0,0,10"/>
 
                 <!-- PRESETS -->
-                <ItemsControl ItemsSource="{Binding PresetNames}">
+                <ItemsControl ItemsSource="{Binding PresetNames}" 
+                              Margin="0,10,0,0">
+
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel/>
@@ -197,9 +201,9 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Width="140"
-                                    Height="80"
+                                    Height="70"
                                     Margin="5"
-                                    CornerRadius="12"
+                                    CornerRadius="10"
                                     Background="#2d2d30"
                                     Cursor="Hand"
                                     Tag="{Binding}">
@@ -216,7 +220,8 @@
                                         <Setter Property="BorderThickness" Value="2"/>
 
                                         <Style.Triggers>
-                                            <!-- DataTrigger z MultiBinding -->
+
+                                            <!-- ACTIVE PRESET -->
                                             <DataTrigger Value="True">
                                                 <DataTrigger.Binding>
                                                     <MultiBinding Converter="{StaticResource ActivePresetToBoolConverter}">
@@ -224,22 +229,34 @@
                                                         <Binding Path="Tag" RelativeSource="{RelativeSource Self}"/>
                                                     </MultiBinding>
                                                 </DataTrigger.Binding>
+
                                                 <Setter Property="BorderBrush" Value="#3a8dde"/>
+                                                <Setter Property="Effect">
+                                                    <Setter.Value>
+                                                        <DropShadowEffect Color="#3a8dde"
+                                                                          BlurRadius="15"
+                                                                          ShadowDepth="0"
+                                                                          Opacity="0.7"/>
+                                                    </Setter.Value>
+                                                </Setter>
                                             </DataTrigger>
 
+                                            <!-- HOVER -->
                                             <Trigger Property="IsMouseOver" Value="True">
                                                 <Setter Property="Background" Value="#3a3a3a"/>
                                             </Trigger>
+
                                         </Style.Triggers>
                                     </Style>
                                 </Border.Style>
 
-                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Grid>
                                     <TextBlock Text="{Binding}"
                                                Foreground="White"
                                                FontWeight="Bold"
-                                               HorizontalAlignment="Center"/>
-                                </StackPanel>
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Grid>
 
                             </Border>
                         </DataTemplate>
@@ -386,25 +403,56 @@
                                 MouseLeave="Chart_MouseLeave">
 
                             <!-- NETWORK -->
-                            <Polyline Stroke="#3a8dde"
-                                      StrokeThickness="2">
+
+                            <!-- AREA -->
+                            <Path>
+                                <Path.Data>
+                                    <MultiBinding Converter="{StaticResource ChartAreaConverter}">
+                                        <Binding Path="Stats.DownloadHistory"/>
+                                        <Binding ElementName="ChartCanvas" Path="ActualWidth"/>
+                                    </MultiBinding>
+                                </Path.Data>
+
+                                <Path.Fill>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#803a8dde" Offset="0"/>
+                                        <GradientStop Color="#003a8dde" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Path.Fill>
+                            </Path>
+
+                            <!-- LINE -->
+                            <Polyline Stroke="#3a8dde" StrokeThickness="2">
                                 <Polyline.Points>
                                     <MultiBinding Converter="{StaticResource ChartConverter}">
                                         <Binding Path="Stats.DownloadHistory"/>
                                         <Binding ElementName="ChartCanvas" Path="ActualWidth"/>
-                                        <Binding Path="Stats.MaxDownload"/>
                                     </MultiBinding>
                                 </Polyline.Points>
                             </Polyline>
 
                             <!-- DISK -->
-                            <Polyline Stroke="#f44336"
-                                      StrokeThickness="2">
+                            <Path>
+                                <Path.Data>
+                                    <MultiBinding Converter="{StaticResource ChartAreaConverter}">
+                                        <Binding Path="Stats.DiskWriteHistory"/>
+                                        <Binding ElementName="ChartCanvas" Path="ActualWidth"/>
+                                    </MultiBinding>
+                                </Path.Data>
+
+                                <Path.Fill>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#80f44336" Offset="0"/>
+                                        <GradientStop Color="#00f44336" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Path.Fill>
+                            </Path>
+
+                            <Polyline Stroke="#f44336" StrokeThickness="2">
                                 <Polyline.Points>
                                     <MultiBinding Converter="{StaticResource ChartConverter}">
                                         <Binding Path="Stats.DiskWriteHistory"/>
                                         <Binding ElementName="ChartCanvas" Path="ActualWidth"/>
-                                        <Binding Path="Stats.MaxDisk"/>
                                     </MultiBinding>
                                 </Polyline.Points>
                             </Polyline>
@@ -465,28 +513,6 @@
                 </StackPanel>
 
             </Grid>
-
-        </Border>
-
-        <!-- RIGHT SIDE LOGS -->
-        <Border Grid.Column="1"
-                Background="#1e1e1e"
-                CornerRadius="8"
-                Margin="10"
-                Padding="10">
-
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding InstallLogs}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}"
-                                       Foreground="#cccccc"
-                                       FontSize="13"
-                                       Margin="0,2"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
 
         </Border>
 
