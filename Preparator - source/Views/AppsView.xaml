@@ -398,10 +398,31 @@
                             Padding="5">
 
                         <Grid>
+
                             <Canvas x:Name="ChartCanvas"
+<<<<<<< HEAD
                                     VerticalAlignment="Stretch"
                                     MinHeight="80"
+=======
+                                    MouseMove="Chart_MouseMove"
+                                    Height="120"
+>>>>>>> 4d9420e4c24cd27c801958ec58786bbb1a2ddd58
                                     ClipToBounds="True">
+
+                                <Canvas.RenderTransform>
+                                    <TranslateTransform X="{Binding Stats.Offset}"/>
+                                </Canvas.RenderTransform>
+
+                                <Border x:Name="Tooltip"
+                                        Background="#333"
+                                        Padding="5"
+                                        CornerRadius="4"
+                                        Visibility="Collapsed">
+
+                                    <TextBlock x:Name="TooltipText"
+                                               Foreground="White"
+                                               FontSize="12"/>
+                                </Border>
 
                                 <!-- GRID LINES -->
                                 <ItemsControl ItemsSource="{Binding Gridlines}">
