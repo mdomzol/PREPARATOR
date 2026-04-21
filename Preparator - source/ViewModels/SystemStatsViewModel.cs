@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 
@@ -22,8 +21,21 @@ public class SystemStatsViewModel : INotifyPropertyChanged
     private const double SmoothFactor = 0.3;
 
     public ObservableCollection<double> DownloadHistory { get; } = new();
-    public ObservableCollection<double> DiskReadHistory { get; } = new();
     public ObservableCollection<double> DiskWriteHistory { get; } = new();
+
+    private double _maxDownload = 1;
+    public double MaxDownload
+    {
+        get => _maxDownload;
+        set { _maxDownload = value; OnPropertyChanged(); }
+    }
+
+    private double _maxDisk = 1;
+    public double MaxDisk
+    {
+        get => _maxDisk;
+        set { _maxDisk = value; OnPropertyChanged(); }
+    }
 
     private double _downloadValue;
     public double DownloadValue
@@ -48,13 +60,6 @@ public class SystemStatsViewModel : INotifyPropertyChanged
         set { _upload = value; OnPropertyChanged(); }
     }
 
-    private string _diskRead;
-    public string DiskRead
-    {
-        get => _diskRead;
-        set { _diskRead = value; OnPropertyChanged(); }
-    }
-
     private string _diskWrite;
     public string DiskWrite
     {
@@ -66,7 +71,6 @@ public class SystemStatsViewModel : INotifyPropertyChanged
     new[]
     {
         DownloadHistory.DefaultIfEmpty(0).Max(),
-        DiskReadHistory.DefaultIfEmpty(0).Max(),
         DiskWriteHistory.DefaultIfEmpty(0).Max()
     }.Max();
 
@@ -110,21 +114,13 @@ public class SystemStatsViewModel : INotifyPropertyChanged
         DownloadHistory.Add(_smoothDownload);
 
         // DISK STATS
-        var diskRead = _diskReadCounter.NextValue();
         var diskWrite = _diskWriteCounter.NextValue();
 
-        _smoothDiskRead = Smooth(_smoothDiskRead, diskRead);
         _smoothDiskWrite = Smooth(_smoothDiskWrite, diskWrite);
 
-        DiskRead = FormatBytes(_smoothDiskRead);
         DiskWrite = FormatBytes(_smoothDiskWrite);
 
-        DiskReadHistory.Add(_smoothDiskRead);
         DiskWriteHistory.Add(_smoothDiskWrite);
-
-        DiskReadHistory.Add(diskRead);
-        if (DiskReadHistory.Count > MaxPoints)
-            DiskReadHistory.RemoveAt(0);
 
         DiskWriteHistory.Add(diskWrite);
         if (DiskWriteHistory.Count > MaxPoints)
@@ -135,8 +131,16 @@ public class SystemStatsViewModel : INotifyPropertyChanged
             DownloadHistory.RemoveAt(0);
 
         OnPropertyChanged(nameof(DownloadHistory));
-        OnPropertyChanged(nameof(DiskReadHistory));
         OnPropertyChanged(nameof(DiskWriteHistory));
+
+        MaxDownload = Math.Max(DownloadHistory.DefaultIfEmpty(0).Max(), 1);
+        MaxDisk = Math.Max(DiskWriteHistory.DefaultIfEmpty(0).Max(), 1);
+
+        MaxDownload *= 1.05;
+        MaxDisk *= 1.05;
+
+        OnPropertyChanged(nameof(MaxDownload));
+        OnPropertyChanged(nameof(MaxDisk));
     }
 
 

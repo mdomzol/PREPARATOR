@@ -137,6 +137,15 @@ namespace Preparator.ViewModels
 
         public int SelectedCount => Apps.Count(a => a.IsSelected);
 
+        public List<double> Gridlines { get; } = new()
+            {
+                0,
+                15,
+                30,
+                45,
+                60
+            };
+
         private void Install()
         {
             var selected = Apps.Where(a => a.IsSelected).ToList();

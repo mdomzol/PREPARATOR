@@ -344,6 +344,7 @@
         </ScrollViewer>
 
         <Border Grid.Row="2"
+                MaxHeight="180"
                 Background="#252526"
                 Padding="10"
                 BorderBrush="#333"
@@ -356,10 +357,17 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- LEFT SIDE LIFE STATS -->
-                <StackPanel Margin="10">
+                <Grid Margin="10">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
                     <!-- LEGEND -->
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                    <StackPanel Grid.Row="0"
+                                Orientation="Horizontal" 
+                                Margin="0,0,0,8">
                         
                         <!-- NETWORK -->
                         <StackPanel Orientation="Horizontal" Margin="0,0,15,0">
@@ -370,17 +378,7 @@
                             <TextBlock Text="{Binding Stats.Download}"
                                        Foreground="White"/>
                         </StackPanel>
-                        
-                        <!-- DISK READ -->
-                        <StackPanel Orientation="Horizontal" Margin="0,0,15,0">
-                            <Ellipse Width="10" Height="10" Fill="#4caf50" Margin="0,0,5,0"/>
-                            <TextBlock Text="Read:"
-                                       Foreground="White"
-                                       Margin="0,0,5,0"/>
-                            <TextBlock Text="{Binding Stats.DiskRead}"
-                                       Foreground="#4caf50"/>
-                        </StackPanel>
-                        
+
                         <!-- DISK WRITE -->
                         <StackPanel Orientation="Horizontal">
                             <Ellipse Width="10" Height="10" Fill="#f44336" Margin="0,0,5,0"/>
@@ -394,13 +392,15 @@
                     </StackPanel>
                     
                     <!-- LIVE GRAPH -->
-                    <Border Background="#1e1e1e"
+                    <Border Grid.Row="1"
+                            Background="#1e1e1e"
                             CornerRadius="8"
                             Padding="5">
 
                         <Grid>
                             <Canvas x:Name="ChartCanvas"
-                                    Height="120"
+                                    VerticalAlignment="Stretch"
+                                    MinHeight="80"
                                     ClipToBounds="True">
 
                                 <!-- GRID LINES -->
@@ -417,22 +417,33 @@
                                 </ItemsControl>
 
                                 <!-- NETWORK -->
-                                <Polyline Stroke="#3a8dde"
-                                      StrokeThickness="2"
-                                      Points="{Binding Stats.DownloadHistory, Converter={StaticResource ChartConverter}}"/>
-
-                                <!-- DISK READ -->
-                                <Polyline Stroke="#4caf50"
-                                      StrokeThickness="2"
-                                      Points="{Binding Stats.DiskReadHistory, Converter={StaticResource ChartConverter}}"/>
+                                <Polyline Stroke="#3a8dde" 
+                                          StrokeThickness="2">
+                                    <Polyline.Points>
+                                        <MultiBinding Converter="{StaticResource ChartConverter}">
+                                            <Binding Path="Stats.DownloadHistory"/>
+                                            <Binding ElementName="ChartCanvas" Path="ActualWidth"/>
+                                            <Binding Path="Stats.MaxDownload"/>
+                                        </MultiBinding>
+                                    </Polyline.Points>
+                                </Polyline>
 
                                 <!-- DISK WRITE -->
                                 <Polyline Stroke="#f44336"
-                                      StrokeThickness="2"
-                                      Points="{Binding Stats.DiskWriteHistory, Converter={StaticResource ChartConverter}}"/>
+                                          StrokeThickness="2">
+                                    <Polyline.Points>
+                                        <MultiBinding Converter="{StaticResource ChartConverter}">
+                                            <Binding Path="Stats.DiskWriteHistory"/>
+                                            <Binding ElementName="ChartCanvas" Path="ActualWidth"/>
+                                            <Binding Path="Stats.MaxDisk"/>
+                                        </MultiBinding>
+                                    </Polyline.Points>
+                                </Polyline>
+                                      
                             </Canvas>
 
-                            <Grid VerticalAlignment="Bottom" Margin="0,0,0,2">
+                            <Grid VerticalAlignment="Bottom" 
+                                  Margin="0,0,0,2">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
@@ -449,7 +460,7 @@
 
                     </Border>
                     
-                </StackPanel>
+                </Grid>
                 
                 <!-- RIGHT SIDE LOGS -->
                 <Border Grid.Column="1"

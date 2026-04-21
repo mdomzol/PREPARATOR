@@ -5,27 +5,28 @@ using System.Windows.Media;
 
 namespace Preparator.Helpers
 {
-    public class ChartConverter : IValueConverter
+    public class ChartConverter : IMultiValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            var values = value as IEnumerable<double>;
+            var data = values[0] as IEnumerable<double>;
+            var width = values[1] as double? ?? 300;
+            var max = values[2] as double? ?? 1;
 
-            if (values == null || !values.Any())
-                return null;
+            if (data == null || !data.Any())
+                return new PointCollection();
 
             var points = new PointCollection();
 
-            double widthStep = 6;
-            var max = Math.Max(values.Max(), 1);
-            if (max == 0)
-                max = 1;
+            double height = 60;
+            int count = data.Count();
+            double step = width / Math.Max(count - 1, 1);
 
             int i = 0;
-            foreach (var v in values)
+            foreach (var v in data)
             {
-                double x = i * widthStep;
-                double y = 60 - (v / max * 60);
+                double x = i * step;
+                double y = height - (v / max * height);
 
                 points.Add(new Point(x, y));
                 i++;
@@ -34,7 +35,7 @@ namespace Preparator.Helpers
             return points;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
