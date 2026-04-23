@@ -8,13 +8,13 @@ namespace Preparator.Helpers
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            var activePreset = values[0] as string;
-            var presetName = values[1] as string;
-
-            if (string.IsNullOrEmpty(activePreset) || string.IsNullOrEmpty(presetName))
+            if (values.Length < 2)
                 return false;
 
-            return activePreset == presetName;
+            var activePreset = values[0]?.ToString();
+            var currentPreset = values[1]?.ToString();
+
+            return activePreset == currentPreset;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

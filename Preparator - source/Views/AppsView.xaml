@@ -32,6 +32,13 @@
                         <Setter Property="Background" Value="#2d2d30"/>
                         <Setter Property="BorderBrush" Value="#2d2d30"/>
 
+                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                            </Setter.Value>
+                        </Setter>
+
                         <Style.Triggers>
 
                             <!-- SELECTED -->
@@ -50,7 +57,39 @@
                             <!-- HOVER -->
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="BorderBrush" Value="#555"/>
+
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
+
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                                         To="1.05"
+                                                         Duration="0:0:0.15"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                                         To="1.05"
+                                                         Duration="0:0:0.15"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                                         To="1"
+                                                         Duration="0:0:0.15"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                                         To="1"
+                                                         Duration="0:0:0.15"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
 
                         </Style.Triggers>
                     </Style>
@@ -163,244 +202,502 @@
     <Grid Background="#1e1e1e">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- HEADER -->
-            <RowDefinition Height="*"/> <!-- MAIN -->
-            <RowDefinition Height="180"/> <!-- FOOTER-->
+            <RowDefinition Height="Auto"/>  <!-- HEADER -->
+            <RowDefinition Height="*"/>     <!-- MAIN -->
+            <RowDefinition Height="180"/>   <!-- FOOTER-->
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="320"/> <!-- LOGS -->
+            <ColumnDefinition Width="320"/> <!-- RIGHT PANEL -->
         </Grid.ColumnDefinitions>
             
 
-        <Border Grid.Row="0"
-                Background="#252526"
-                Padding="15"
-                BorderBrush="#333"
-                BorderThickness="0,0,0,1">
+        <Grid Grid.Row="0"
+              Grid.ColumnSpan="2"
+              Background="#252526">
 
-            <StackPanel>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- TITLE -->
+                <RowDefinition Height="Auto"/> <!-- PRESETS -->
+                <RowDefinition Height="Auto"/> <!-- TOOLBAR -->
+            </Grid.RowDefinitions>
 
-                <!-- HEADER -->
-                <TextBlock Text="Applications"
-                           Foreground="White"
-                           FontSize="24"
-                           Margin="0,0,0,10"/>
+            <Border Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Padding="20"
+                    BorderBrush="#333"
+                    BorderThickness="0,0,0,1">
 
-                <!-- PRESETS -->
-                <ItemsControl ItemsSource="{Binding PresetNames}" 
-                              Margin="0,10,0,0">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10"
+                                      ShadowDepth="2"
+                                      Opacity="0.3"
+                                      Color="Black"/>
+                </Border.Effect>
 
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#2b2b2e" Offset="0"/>
+                        <GradientStop Color="#252526" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
 
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Width="140"
-                                    Height="70"
-                                    Margin="5"
-                                    CornerRadius="10"
-                                    Background="#2d2d30"
-                                    Cursor="Hand"
-                                    Tag="{Binding}">
+                <StackPanel>
 
-                                <Border.InputBindings>
-                                    <MouseBinding Gesture="LeftClick"
-                                                  Command="{Binding DataContext.ApplyPresetCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                  CommandParameter="{Binding}"/>
-                                </Border.InputBindings>
+                    <!-- TITLE -->
+                    <TextBlock Text="Applications"
+                               Foreground="White"
+                               FontSize="26"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,15"/>
 
-                                <Border.Style>
-                                    <Style TargetType="Border">
-                                        <Setter Property="BorderBrush" Value="#2d2d30"/>
-                                        <Setter Property="BorderThickness" Value="2"/>
+                    <!-- PRESETS -->
+                    <ItemsControl Grid.Row="1"  
+                                  ItemsSource="{Binding PresetNames}">
 
-                                        <Style.Triggers>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
 
-                                            <!-- ACTIVE PRESET -->
-                                            <DataTrigger Value="True">
-                                                <DataTrigger.Binding>
-                                                    <MultiBinding Converter="{StaticResource ActivePresetToBoolConverter}">
-                                                        <Binding Path="DataContext.ActivePreset" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
-                                                        <Binding Path="Tag" RelativeSource="{RelativeSource Self}"/>
-                                                    </MultiBinding>
-                                                </DataTrigger.Binding>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Width="140"
+                                        Height="70"
+                                        Margin="5"
+                                        CornerRadius="10"
+                                        Cursor="Hand"
+                                        Tag="{Binding}"
+                                        SnapsToDevicePixels="True">
 
-                                                <Setter Property="BorderBrush" Value="#3a8dde"/>
-                                                <Setter Property="Effect">
-                                                    <Setter.Value>
-                                                        <DropShadowEffect Color="#3a8dde"
-                                                                          BlurRadius="15"
-                                                                          ShadowDepth="0"
-                                                                          Opacity="0.7"/>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </DataTrigger>
+                                    <Border.Background>
+                                        <SolidColorBrush Color="#3d3d30"/>
+                                    </Border.Background>
 
-                                            <!-- HOVER -->
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#3a3a3a"/>
-                                            </Trigger>
+                                    <Border.RenderTransform>
+                                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                    </Border.RenderTransform>
 
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Style>
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            
+                                            <Setter Property="BorderBrush" Value="#2d2d30"/>
+                                            <Setter Property="BorderThickness" Value="1"/>
 
-                                <Grid>
+                                            <Style.Triggers>
+
+                                                <!-- ACTIVE PRESET -->
+                                                <DataTrigger Value="True">
+                                                    <DataTrigger.Binding>
+                                                        <MultiBinding Converter="{StaticResource ActivePresetToBoolConverter}">
+                                                            <Binding Path="DataContext.ActivePreset"
+                                                                     RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                                            <Binding Path="Tag"
+                                                                     RelativeSource="{RelativeSource Self}"/>
+                                                        </MultiBinding>
+                                                    </DataTrigger.Binding>
+
+                                                    <Setter Property="BorderBrush" Value="#3a8dde"/>
+                                                    <Setter Property="Background">
+                                                        <Setter.Value>
+                                                            <SolidColorBrush Color="#2a2f36"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+
+                                                <!-- HOVER -->
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <ScaleTransform ScaleX="1.04" ScaleY="1.04"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Setter Property="Effect">
+                                                        <Setter.Value>
+                                                            <DropShadowEffect BlurRadius="18"
+                                                                              ShadowDepth="2"
+                                                                              Opacity="0.25"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+
+                                    <Border.InputBindings>
+                                        <MouseBinding Gesture="LeftClick"
+                                                      Command="{Binding DataContext.ApplyPresetCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                      CommandParameter="{Binding}"/>
+                                    </Border.InputBindings>
+
                                     <TextBlock Text="{Binding}"
                                                Foreground="White"
-                                               FontWeight="Bold"
+                                               FontWeight="SemiBold"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"/>
-                                </Grid>
 
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
-                <!-- TOOLBAR -->
-                <Grid Margin="0,15,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                    <!-- TOOLBAR -->
+                    <Grid Grid.Row="2"
+                          Margin="0,15,0,0" Cursor="">
 
-                    <!-- SEARCH -->
-                    <TextBox Grid.Column="0"
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- SEARCH -->
+                        <TextBox Grid.Column="0"
                              Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource SearchBoxStyle}"/>
 
 
-                    <!-- CLEAR -->
-                    <Button Grid.Column="1"
-                            Content="Clear"
-                            Margin="10,0"
-                            Command="{Binding ClearSelectionCommand}"
-                            Style="{StaticResource WindowButtonStyle}"/>
+                        <!-- CLEAR -->
+                        <Button Grid.Column="1"
+                                Command="{Binding ClearSelectionCommand}"
+                                Cursor="Hand"
+                                Padding="12,6"
+                                Margin="10,0">
 
-                    <!-- INSTALL -->
-                    <Button Grid.Column="2"
-                            Content="{Binding SelectedCount, StringFormat=Install ({0})}"
-                            Command="{Binding InstallCommand}"
-                            Style="{StaticResource InstallButtonStyle}"/>
-                </Grid>
+                            <Button.Style>
+                                <Style TargetType="Button">
 
-            </StackPanel>
-        </Border>
+                                    <Setter Property="Background" Value="#2d2d30"/>
+                                    <Setter Property="Foreground" Value="#cfcfcf"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="BorderBrush" Value="#3a3a3a"/>
 
-        <!-- SCROLL VIEWER -->
-        <ScrollViewer Grid.Row="1"
-                      VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Disabled">
-
-            <StackPanel Margin="20">
-
-                <!-- COUNT -->
-                <TextBlock Text="{Binding SelectedCount, StringFormat=Selected: {0} apps}"
-                           Foreground="White"
-                           Opacity="0.7"
-                           Margin="0,0,0,20"/>
-
-                <!-- GROUPED APPS -->
-                <ItemsControl ItemsSource="{Binding GroupedApps}">
-
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-
-                    <ItemsControl.GroupStyle>
-                        <GroupStyle>
-                            <GroupStyle.ContainerStyle>
-                                <Style TargetType="GroupItem">
                                     <Setter Property="Template">
                                         <Setter.Value>
-                                            <ControlTemplate TargetType="GroupItem">
+                                            <ControlTemplate TargetType="Button">
 
-                                                <StackPanel>
+                                                <Border x:Name="bg"
+                                                        Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="1"
+                                                        CornerRadius="8">
 
-                                                    <!-- HEADER -->
-                                                    <TextBlock Text="{Binding Name}"
-                                                               Foreground="White"
-                                                               FontSize="18"
-                                                               Margin="10,20,0,10"/>
+                                                    <ContentPresenter HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Center"/>
+                                                </Border>
 
-                                                    <!-- ITEMS -->
-                                                    <ItemsControl ItemsSource="{Binding Items}"
-                                                                  ItemTemplate="{StaticResource AppItemTemplate}">
+                                                <ControlTemplate.Triggers>
 
-                                                        <ItemsControl.ItemsPanel>
-                                                            <ItemsPanelTemplate>
-                                                                <WrapPanel/>
-                                                            </ItemsPanelTemplate>
-                                                        </ItemsControl.ItemsPanel>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="bg" Property="Background" Value="#3a3a3a"/>
+                                                        <Setter TargetName="bg" Property="BorderBrush" Value="#555"/>
+                                                    </Trigger>
 
-                                                    </ItemsControl>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="bg" Property="Background" Value="#1f1f1f"/>
+                                                    </Trigger>
 
-                                                </StackPanel>
+                                                </ControlTemplate.Triggers>
 
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
+
                                 </Style>
-                            </GroupStyle.ContainerStyle>
-                        </GroupStyle>
-                    </ItemsControl.GroupStyle>
+                            </Button.Style>
 
-                </ItemsControl>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Clear"/>
+                            </StackPanel>
 
-            </StackPanel>
+                        </Button>
 
-        </ScrollViewer>
+                        <!-- INSTALL -->
+                        <Button Grid.Column="2"
+        Content="{Binding SelectedCount, StringFormat=Install ({0})}"
+        Command="{Binding InstallCommand}"
+        Cursor="Hand">
+
+                            <Button.Style>
+                                <Style TargetType="Button">
+
+                                    <Setter Property="Background" Value="#3a8dde"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="Padding" Value="14,6"/>
+
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+
+                                                <Border x:Name="root"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                RenderTransformOrigin="0.5,0.5">
+
+                                                    <Border.RenderTransform>
+                                                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                                    </Border.RenderTransform>
+
+                                                    <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+
+                                                </Border>
+
+                                                <ControlTemplate.Triggers>
+
+                                                    <!-- HOVER -->
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="root" Property="Background" Value="#4a9cff"/>
+                                                    </Trigger>
+
+                                                    <!-- PRESS -->
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="root" Property="RenderTransform">
+                                                            <Setter.Value>
+                                                                <ScaleTransform ScaleX="0.96" ScaleY="0.96"/>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+
+                                                    <!-- DISABLED STATE -->
+                                                    <Trigger Property="IsEnabled" Value="False">
+                                                        <Setter TargetName="root" Property="Opacity" Value="0.4"/>
+                                                    </Trigger>
+
+                                                </ControlTemplate.Triggers>
+
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+
+                                </Style>
+                            </Button.Style>
+
+                        </Button>
+                        
+                    </Grid>
+
+                    <!-- COUNT -->
+                    <TextBlock Text="{Binding SelectedCount, StringFormat=Selected: {0} apps}"
+                               Foreground="#9aa0a6"
+                               FontSize="12"
+                               Margin="2,8,0,0"
+                               HorizontalAlignment="Left"/>
+                    
+                </StackPanel>
+            </Border>
+
+        </Grid>
+
+    <!-- MAIN CONTENT (APPS) -->
+
+        <Grid Grid.Row="1"
+              Grid.Column="0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- APPS -->
+            <ListBox Grid.Row="1"
+                     ItemsSource="{Binding GroupedApps}"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+
+                <ListBox.Resources>
+                    <Style TargetType="ScrollBar" BasedOn="{StaticResource ModernScrollBar}" />
+                </ListBox.Resources>
+
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Focusable" Value="False"/>
+                        <Setter Property="IsHitTestVisible" Value="False"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Margin" Value="0"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+
+                <ListBox.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.ContainerStyle>
+                            <Style TargetType="GroupItem">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="GroupItem">
+
+                                            <StackPanel>
+                                                
+                                                <!-- HEADER -->
+                                                <TextBlock Text="{Binding Name}"
+                                                           Foreground="White"
+                                                           FontSize="18"
+                                                           Margin="10,20,0,10"/>
+                                                
+                                                <!-- ITEMS -->
+                                                <ItemsControl ItemsSource="{Binding Items}"
+                                                              ItemTemplate="{StaticResource AppItemTemplate}">
+
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    
+                                                </ItemsControl>
+                                                
+                                            </StackPanel>
+                                            
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GroupStyle.ContainerStyle>
+                    </GroupStyle>
+                </ListBox.GroupStyle>
+                
+            </ListBox>
+            
+        </Grid>
+
+        <!-- RIGHT PANEL -->
+        <Border Grid.Row="1"
+                Grid.Column="1"
+                Background="#252526"
+                BorderBrush="#333"
+                BorderThickness="1,0,0,0">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Installation Log"
+                           Foreground="White"
+                           FontSize="16"
+                           Margin="10"/>
+
+                <Border Background="#141416"
+                        CornerRadius="6"
+                        Margin="10"
+                        BorderBrush="#2a2a2d"
+                        BorderThickness="1">
+
+                    <ListBox x:Name="LogsList"
+                             ItemsSource="{Binding InstallLogs}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             Margin="10"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             Loaded="LogsList_Loaded">
+
+                        <ListBox.Resources>
+                            <Style TargetType="ScrollBar" BasedOn="{StaticResource ModernScrollBar}" />
+                        </ListBox.Resources>
+
+                        <!-- ITEM STYLE -->
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="2"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="0,2">
+
+                                    <!-- TIMESTAMP -->
+                                    <TextBlock Text="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}"
+                                               Foreground="#777"
+                                               FontFamily="Consolas"
+                                               Margin="0,0,6,0"/>
+
+                                    <!-- MESSAGE -->
+                                    <TextBlock Text="{Binding Message}"
+                                               FontFamily="Consolas"
+                                               FontSize="11">
+
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+
+                                                <Setter Property="Foreground" Value="Gray"/>
+
+                                                <Style.Triggers>
+
+                                                    <DataTrigger Binding="{Binding Type}" Value="Install">
+                                                        <Setter Property="Foreground" Value="Orange"/>
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding Type}" Value="Download">
+                                                        <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding Type}" Value="Success">
+                                                        <Setter Property="Foreground" Value="LightGreen"/>
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding Type}" Value="Error">
+                                                        <Setter Property="Foreground" Value="Red"/>
+                                                    </DataTrigger>
+
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+
+                                    </TextBlock>
+
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+
+                    </ListBox>
+                </Border>
+            </Grid>
+
+        </Border>
 
         <Border Grid.Row="2"
-                MaxHeight="180"
+                Grid.ColumnSpan="2"
                 Background="#252526"
                 Padding="10"
                 BorderBrush="#333"
                 BorderThickness="1,1,0,0">
-
+            
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="40"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="40"/>
                 </Grid.ColumnDefinitions>
-
+                
                 <!-- ================= LEFT SCALE ================= -->
-                <StackPanel Grid.Column="0"
-                            VerticalAlignment="Stretch"
-                            Margin="5">
-
-                    <TextBlock Text="{Binding Stats.MaxDownload, StringFormat={}{0:0.#}}"
+                <StackPanel Grid.Column="0" Margin="5">
+                    <TextBlock Text="{Binding Stats.MaxDownload}" 
                                Foreground="#3a8dde"/>
-
-                    <TextBlock Text="0"
-                               Foreground="#3a8dde"
-                               VerticalAlignment="Bottom"
-                               Margin="0,80,0,0"/>
+                    
+                    <TextBlock Text="0" Margin="0,80,0,0" 
+                               Foreground="#3a8dde"/>
                 </StackPanel>
 
                 <!-- ================= CHART AREA ================= -->
-                <Grid Grid.Column="1">
-
-                    <!-- CANVAS WRAPPER -->
-                    <Border Background="#1e1e1e"
-                            CornerRadius="6"
-                            ClipToBounds="True">
-
+                <Border Grid.Column="1"
+                        Background="#1a1a1c"
+                        CornerRadius="6"
+                        Padding="5">
+                    <Grid>
                         <Canvas x:Name="ChartCanvas"
-                                Height="120"
-                                ClipToBounds="True"
-                                MouseMove="Chart_MouseMove"
-                                MouseLeave="Chart_MouseLeave">
+                        Height="120"
+                        ClipToBounds="True"
+                        MouseMove="Chart_MouseMove"
+                        MouseLeave="Chart_MouseLeave">
 
                             <!-- NETWORK -->
 
@@ -466,53 +763,46 @@
                                     Panel.ZIndex="999">
 
                                 <TextBlock x:Name="TooltipText"
-                                           Foreground="White"/>
+                                   Foreground="White"/>
 
                             </Border>
 
                         </Canvas>
 
-                    </Border>
-
-                    <!-- OVERLAY LEGEND (TOP LEFT) -->
-                    <StackPanel Orientation="Horizontal"
+                        <!-- OVERLAY LEGEND (TOP LEFT) -->
+                        <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Top"
                                 Margin="8"
                                 Panel.ZIndex="10">
 
-                        <StackPanel Orientation="Horizontal" Margin="0,0,15,0">
-                            <Ellipse Width="10" Height="10" Fill="#3a8dde" Margin="0,0,5,0"/>
-                            <TextBlock Text="Network:" Foreground="White"/>
-                            <TextBlock Text="{Binding Stats.Download}" Foreground="#3a8dde"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,15,0">
+                                <Ellipse Width="10" Height="10" Fill="#3a8dde" Margin="0,0,5,0"/>
+                                <TextBlock Text="Network:" Foreground="White"/>
+                                <TextBlock Text="{Binding Stats.Download}" Foreground="#3a8dde"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="10" Height="10" Fill="#f44336" Margin="0,0,5,0"/>
+                                <TextBlock Text="Disk:" Foreground="White"/>
+                                <TextBlock Text="{Binding Stats.DiskWrite}" Foreground="#f44336"/>
+                            </StackPanel>
+
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal">
-                            <Ellipse Width="10" Height="10" Fill="#f44336" Margin="0,0,5,0"/>
-                            <TextBlock Text="Disk:" Foreground="White"/>
-                            <TextBlock Text="{Binding Stats.DiskWrite}" Foreground="#f44336"/>
-                        </StackPanel>
+                    </Grid>
+                </Border>
 
-                    </StackPanel>
+            <!-- ================= RIGHT SCALE ================= -->
+            <StackPanel Grid.Column="2" Margin="5">
+                <TextBlock Text="{Binding Stats.MaxDisk}" 
+                           Foreground="#f44336"/>
+                
+                <TextBlock Text="0" Margin="0,80,0,0" 
+                           Foreground="#f44336"/>
+            </StackPanel>
 
-                </Grid>
-
-                <!-- ================= RIGHT SCALE ================= -->
-                <StackPanel Grid.Column="2"
-                            VerticalAlignment="Stretch"
-                            Margin="5">
-
-                    <TextBlock Text="{Binding Stats.MaxDisk, StringFormat={}{0:0.#}}"
-                               Foreground="#f44336"/>
-
-                    <TextBlock Text="0"
-                               Foreground="#f44336"
-                               VerticalAlignment="Bottom"
-                               Margin="0,80,0,0"/>
-
-                </StackPanel>
-
-            </Grid>
+    </Grid>
 
         </Border>
 

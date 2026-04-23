@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Windows.Input;
 using System.ComponentModel;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace Preparator.ViewModels
 {
@@ -18,7 +19,7 @@ namespace Preparator.ViewModels
         public ICommand InstallCommand { get; }
         public ICommand ClearSelectionCommand { get; }
         public SystemStatsViewModel Stats { get; } = new SystemStatsViewModel();
-        public ObservableCollection<string> InstallLogs { get; } = new(); 
+        public ObservableCollection<LogItem> InstallLogs { get; } = new(); 
         private readonly NiniteService _niniteService;
 
         public ObservableCollection<string> PresetNames { get; }
@@ -180,19 +181,50 @@ namespace Preparator.ViewModels
             });
         }
 
-        private string ParseLog(string line)
+        private LogItem ParseLog(string line)
         {
             if (line.Contains("Installing"))
-                return $"🔧 {line}";
+                return new LogItem
+                {
+                    Message = $"🔧 {line}",
+                    Timestamp = DateTime.Now,
+                    Type = LogType.Install
+                };
 
             if (line.Contains("Downloading"))
-                return $"⬇ {line}";
+                return new LogItem
+                {
+                    Message = $"⬇ {line}",
+                    Timestamp = DateTime.Now,
+                    Type = LogType.Download
+                };
 
             if (line.Contains("Complete"))
-                return $"✔ {line}";
+                return new LogItem
+                {
+                    Message = $"✔ {line}",
+                    Timestamp = DateTime.Now,
+                    Type = LogType.Success
+                };
 
-            return null;
+            return new LogItem
+            {
+                Message = line,
+                Timestamp = DateTime.Now,
+                Type = LogType.Info
+            };
         }
+
+        public enum LogType
+        {
+            Info,
+            Download,
+            Install,
+            Success,
+            Error
+        }
+
+        public LogType Type { get; set; }
 
         private string _searchText;
         public string SearchText

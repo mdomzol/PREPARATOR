@@ -2,6 +2,7 @@
 using Preparator.ViewModels;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Collections.Specialized;
 
 namespace Preparator.Views
 {
@@ -10,7 +11,22 @@ namespace Preparator.Views
         public AppsView()
         {
             InitializeComponent();
+            DataContext = new AppsViewModel();
 
+        }
+
+        private void LogsList_Loaded(object sender, RoutedEventArgs e)
+        {
+            var list = (ListBox)sender;
+
+            if (list.Items is INotifyCollectionChanged collection)
+            {
+                collection.CollectionChanged += (s, args) =>
+                {
+                    if (list.Items.Count > 0)
+                        list.ScrollIntoView(list.Items[list.Items.Count - 1]);
+                };
+            }
         }
 
         private void Chart_MouseMove(object sender, MouseEventArgs e)
