@@ -1,8 +1,10 @@
-﻿using System.Windows;
-using Preparator.ViewModels;
+﻿using Preparator.ViewModels;
+using System.Collections.Specialized;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Collections.Specialized;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace Preparator.Views
 {
@@ -83,6 +85,80 @@ namespace Preparator.Views
             }
 
             return $"{bytes:0.##} {sizes[order]}";
+        }
+
+        private void Preset_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not FrameworkElement btn)
+                return;
+
+            var pos = btn.TransformToAncestor(PresetList)
+                         .Transform(new Point(0, 0));
+
+            // === EASING ===
+            var ease = new CubicEase
+            {
+                EasingMode = EasingMode.EaseOut
+            };
+
+            // === MOVE (X) ===
+            var moveAnim = new DoubleAnimationUsingKeyFrames
+            {
+                Duration = TimeSpan.FromMilliseconds(260)
+            };
+
+            moveAnim.KeyFrames.Add(new EasingDoubleKeyFrame(
+                pos.X + 12, // overshoot
+                KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(160)))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            });
+
+            moveAnim.KeyFrames.Add(new EasingDoubleKeyFrame(
+                pos.X,
+                KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(260)))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            });
+
+            HighlightTransform.BeginAnimation(TranslateTransform.XProperty, moveAnim);
+
+            // === WIDTH ===
+            var widthAnim = new DoubleAnimation
+            {
+                To = btn.ActualWidth,
+                Duration = TimeSpan.FromMilliseconds(220),
+                EasingFunction = ease
+            };
+
+            SelectionHighlight.BeginAnimation(WidthProperty, widthAnim);
+
+            // === FADE IN ===
+            var fadeAnim = new DoubleAnimation
+            {
+                To = 1,
+                Duration = TimeSpan.FromMilliseconds(120)
+            };
+
+            SelectionHighlight.BeginAnimation(OpacityProperty, fadeAnim);
+
+            // === SCALE POP (micro interaction) ===
+            var scaleAnim = new DoubleAnimation
+            {
+                From = 0.95,
+                To = 1,
+                Duration = TimeSpan.FromMilliseconds(180),
+                EasingFunction = ease
+            };
+
+            HighlightScale.BeginAnimation(ScaleTransform.ScaleXProperty, scaleAnim);
+            HighlightScale.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnim);
+
+            // === MVVM COMMAND ===
+            if (DataContext is AppsViewModel vm && btn.DataContext is string preset)
+            {
+                vm.ApplyPresetCommand.Execute(preset);
+            }
         }
     }
 }

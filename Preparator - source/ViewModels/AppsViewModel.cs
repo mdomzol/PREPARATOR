@@ -244,6 +244,9 @@ namespace Preparator.ViewModels
             get => _activePreset;
             set
             {
+                if (_activePreset == value)
+                    return;
+
                 _activePreset = value;
                 OnPropertyChanged();
             }
@@ -259,6 +262,19 @@ namespace Preparator.ViewModels
             ActivePreset = null;
 
             OnPropertyChanged(nameof(SelectedCount));
+        }
+
+        public List<string> GetPresetApps(string preset)
+        {
+            if (!Presets.ContainsKey(preset))
+                return new();
+
+            var ids = Presets[preset];
+
+            return Apps
+                .Where(a => ids.Contains(a.NiniteId))
+                .Select(a => a.Name)
+                .ToList();
         }
     }
 }

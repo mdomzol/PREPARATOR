@@ -35,7 +35,7 @@ namespace Preparator.Helpers
                 i++;
             }
 
-            return points;
+            return new PointCollection(points);
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
