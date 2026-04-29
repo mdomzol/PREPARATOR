@@ -7,11 +7,19 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/Styles.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
 
-            <helpers:StringToBoolConverter x:Key="StringToBoolConverter"/>
-        </ResourceDictionary>         
+                <ResourceDictionary Source="Resources/Styles/Theme.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/Base.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/Buttons.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/Cards.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/ScrollBars.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/TextBoxes.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/Presets.xaml"/>
+
+                <ResourceDictionary Source="Resources/Converters/Converters.xaml"/>
+
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 
 </Application>

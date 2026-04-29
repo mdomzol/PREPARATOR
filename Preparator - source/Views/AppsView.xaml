@@ -398,16 +398,15 @@
                                                         BorderBrush="#3a3a3a"
                                                         BorderThickness="1">
 
-                                                    <ItemsControl ItemsSource="{Binding DataContext.PresetPreviews[.], RelativeSource={RelativeSource AncestorType=ItemsControl}}">
-
+                                                    <ItemsControl ItemsSource="{Binding DataContext.PresetPreviews[Binding], 
+                                                                  RelativeSource={RelativeSource AncestorType=UserControl}}">
                                                         <ItemsControl.ItemTemplate>
                                                             <DataTemplate>
-                                                                <TextBlock Text="{Binding}"
+                                                                <TextBlock Text="• {Binding}"
                                                                            Foreground="White"
-                                                                           FontSize="11"/>          
+                                                                           FontSize="11"/>      
                                                             </DataTemplate>
                                                         </ItemsControl.ItemTemplate>
-
                                                     </ItemsControl>
 
                                                 </Border>

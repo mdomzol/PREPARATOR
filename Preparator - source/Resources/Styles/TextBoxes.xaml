@@ -1,0 +1,118 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ================= BASE TEXTBOX ================= -->
+    <Style x:Key="BaseTextBoxStyle" TargetType="TextBox">
+
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="#1f1f22"/>
+        <Setter Property="BorderBrush" Value="#333"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="CaretBrush" Value="#3a8dde"/>
+        <Setter Property="SelectionBrush" Value="#3a8dde"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+
+                    <Border x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="8">
+
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      Margin="0"/>
+
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+
+                        <!-- HOVER -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#555"/>
+                        </Trigger>
+
+                        <!-- FOCUS -->
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#3a8dde"/>
+                        </Trigger>
+
+                        <!-- DISABLED -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5"/>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+
+    <!-- ================= SEARCH BOX ================= -->
+    <Style x:Key="SearchBoxStyle" TargetType="TextBox"
+           BasedOn="{StaticResource BaseTextBoxStyle}">
+
+        <Setter Property="Height" Value="38"/>
+        <Setter Property="FontSize" Value="14"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+
+                    <Border x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="10">
+
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- ICON -->
+                            <TextBlock Text="🔍"
+                                       Margin="10,0,6,0"
+                                       VerticalAlignment="Center"
+                                       Foreground="#9aa0a6"/>
+
+                            <!-- TEXT -->
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Grid.Column="1"
+                                          VerticalAlignment="Center"/>
+
+                        </Grid>
+
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#555"/>
+                        </Trigger>
+
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#3a8dde"/>
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5"/>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+
+</ResourceDictionary>
