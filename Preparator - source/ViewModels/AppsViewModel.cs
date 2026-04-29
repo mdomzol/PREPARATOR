@@ -276,5 +276,21 @@ namespace Preparator.ViewModels
                 .Select(a => a.Name)
                 .ToList();
         }
+
+        public Dictionary<string, List<string>> PresetPreviews { get; } =
+            new Dictionary<string, List<string>>
+        {
+            { "Dev", new List<string> { "VS Code", "Git", "Docker" } },
+            { "Gaming", new List<string> { "Steam", "Discord", "OBS" } },
+            { "Basic", new List<string> { "Chrome", "7zip" } }
+        };
+
+        public List<string> GetPresetPreview(string preset)
+        {
+            if (PresetPreviews.TryGetValue(preset, out var list))
+                return list;
+
+            return new List<string>();
+        }
     }
 }
