@@ -36,6 +36,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Assets\Icons\7zip.png" />
     <Resource Include="Assets\Icons\audacity.png" />
     <Resource Include="Assets\Icons\blender.png" />
