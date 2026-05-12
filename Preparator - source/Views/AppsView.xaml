@@ -273,7 +273,7 @@
                                         SnapsToDevicePixels="True">
 
                                     <Border.Background>
-                                        <SolidColorBrush Color="#3d3d30"/>
+                                        <SolidColorBrush Color="#2d2d30"/>
                                     </Border.Background>
 
                                     <Border.RenderTransform>
